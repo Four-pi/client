@@ -1,6 +1,7 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import TicketStatusWidget from "../components/TicketSatusWidget";
 import IPChangeHistoryWidget from "../components/IPChangeHistoryWidget";
 import MachineStatusWidget from "../components/MachineStatusWidget";
 
@@ -9,7 +10,7 @@ export default function IndexPage() {
         <Container fluid>
             <Row className="mt-3">
                 <Col xs={6}>
-                    31/32 Hosts, Today ticket total/auth/reject/remind
+                    <TicketStatusWidget />
                 </Col>
                 <Col xs={6}>
                     <IPChangeHistoryWidget />
