@@ -5,7 +5,7 @@ import TicketStatusWidget from "../components/TicketSatusWidget";
 import IPChangeHistoryWidget from "../components/IPChangeHistoryWidget";
 import MachineStatusWidget from "../components/MachineStatusWidget";
 
-export default function IndexPage() {
+export default function Dashboard() {
     return (
         <Container fluid>
             <Row className="mt-3">

@@ -1,6 +1,6 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import IndexPage from "./pages";
+import Dashboard from "./pages/Dashboard";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Nav, Navbar, NavbarBrand } from "react-bootstrap";
 
@@ -10,7 +10,7 @@ interface NavItem {
     element?: JSX.Element;
 }
 const routes: NavItem[] = [
-    { path: "/", element: <IndexPage />, label: "메인" },
+    { path: "/", element: <Dashboard />, label: "메인" },
 ];
 
 const router = createBrowserRouter(routes);
