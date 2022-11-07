@@ -2,6 +2,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import IPChangeHistoryWidget from "../components/IPChangeHistoryWidget";
+import MachineStatusWidget from "../components/MachineStatusWidget";
 
 export default function IndexPage() {
     return (
@@ -16,7 +17,7 @@ export default function IndexPage() {
             </Row>
             <Row className="mt-3">
                 <Col xs={12}>
-                    Always top, CPU Disk Memory Network
+                    <MachineStatusWidget />
                 </Col>
             </Row>
         </Container>
