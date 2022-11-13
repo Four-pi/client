@@ -1,22 +1,21 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import TicketStatusWidget from "../components/TicketSatusWidget";
-import IPChangeHistoryWidget from "../components/IPChangeHistoryWidget";
-import MachineStatusWidget from "../components/MachineStatusWidget";
+import { MachineStatusWidget, ActiveAddressWidget, RecentlyOpenedAddressWidget, IPChangeHistoryWidget } from "../components/widgets";
 
-export default function Dashboard() {
+export function Dashboard() {
     return (
-        <Container fluid>
-            <Row className="mt-3">
+        <Container className="mt-3" fluid>
+            <Row>
                 <Col xs={6}>
-                    <TicketStatusWidget />
-                </Col>
-                <Col xs={6}>
+                    <ActiveAddressWidget />
                     <IPChangeHistoryWidget />
                 </Col>
+                <Col xs={6}>
+                    <RecentlyOpenedAddressWidget />
+                </Col>
             </Row>
-            <Row className="mt-3">
+            <Row>
                 <Col xs={12}>
                     <MachineStatusWidget />
                 </Col>
