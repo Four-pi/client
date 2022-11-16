@@ -131,7 +131,8 @@ export class Scan extends React.Component<any, { reports: NmapScanReport[] }> {
                         <Pagination.Item key={1} active>
                             2022-11-14
                         </Pagination.Item>
-                        <Pagination.Item key={2}>2022-11-13</Pagination.Item>
+                        <Pagination.Item key={2}>2022-11-13 19:01:00</Pagination.Item>
+                        <Pagination.Item key={2}>2022-11-13 06:55:07</Pagination.Item>
                         <Pagination.Item key={3}>2022-11-12</Pagination.Item>
                         <Pagination.Item key={4}>2022-11-11</Pagination.Item>
                         <Pagination.Item key={5}>2022-11-10</Pagination.Item>

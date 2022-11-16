@@ -8,9 +8,10 @@ import {
     Navbar,
     NavbarBrand,
 } from "react-bootstrap";
-import { LoginController } from "../controllers/login";
-import type { RouteItem } from "../router";
-import { Router } from "../router";
+import { LoginController } from "./controllers/login";
+import type { RouteItem } from "./router";
+import { Router } from "./router";
+import { LoginModal } from "./components/login";
 
 export function Header() {
     const [updateSignal, setUpdateSignal] = useState(true);
@@ -45,33 +46,7 @@ export function Header() {
                 </Container>
             </Navbar>
 
-            <Modal show={showLoginModal} onHide={handleCloseLoginModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>로그인</Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <Form>
-                        <Form.Group className="mb-3">
-                            <Form.Label>ID</Form.Label>
-                            <Form.Control type="text" placeholder="아이디를 입력하세요" />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                            <Form.Label>비밀번호</Form.Label>
-                            <Form.Control type="password" placeholder="비밀번호를 입력하세요" />
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant="primary" onClick={() => {
-                        debugLogin();
-                        handleCloseLoginModal();
-                    }}>로그인</Button>
-                    <Button variant="secondary">회원가입</Button>
-                </Modal.Footer>
-            </Modal>
+            <LoginModal show={showLoginModal} onHide={handleCloseLoginModal} />
         </>
     );
 }
@@ -87,9 +62,9 @@ function NavigationItems() {
     );
 }
 
-function createNavItem(routeItem: RouteItem) {
+function createNavItem(routeItem: RouteItem, index: number) {
     return (
-        <Nav.Item>
+        <Nav.Item key={index}>
             <Nav.Link className="App-header-nav-item" href={routeItem.path}>
                 {routeItem.label}
             </Nav.Link>

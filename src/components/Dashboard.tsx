@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { MachineStatusWidget, ActiveAddressWidget, RecentlyOpenedAddressWidget, IPChangeHistoryWidget } from "../components/widgets";
+import { MachineStatusWidget, ActiveAddressWidget, RecentlyOpenedAddressWidget, IPChangeHistoryWidget } from "./widgets";
 
 export function Dashboard() {
     return (

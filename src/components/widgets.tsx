@@ -9,33 +9,31 @@ import {
     Row,
     Stack,
 } from "react-bootstrap";
-import type { AddressInfo, MachineUsageState } from "../api";
-import { APIController } from "../api";
-import { sleep } from "../utils";
+import type { MachineStatus, MachineStatusAPI } from "../apis/machine";
+import { MachineStatusMockAPI } from "../apis/machine";
+import { Port, PortAPI, PortMockAPI } from "../apis/port";
+import { Request, RequestAPI, RequestMockAPI } from "../apis/request";
 
+const machineStatusAPI: MachineStatusAPI = new MachineStatusMockAPI();
+const portAPI: PortAPI = new PortMockAPI();
+const requestAPI: RequestAPI = new RequestMockAPI();
 
 export function MachineStatusWidget() {
-    const [usageState, setUsageState] = useState<MachineUsageState>({
+    const [usageState, setUsageState] = useState<MachineStatus>({
         cpu: undefined,
         disk: undefined,
         memory: undefined,
         network: undefined,
     });
     useEffect(() => {
-        async function fetchData() {
-            await sleep(200);
-            const usageState =
-                await APIController.instance.getMachineUsageState();
-            setUsageState(usageState);
-        }
-        fetchData();
+        machineStatusAPI.monitor().then(setUsageState);
     });
     return (
         <Card className="mb-3">
             <Card.Header>장치 부하 상태</Card.Header>
             <Card.Body>
                 <Stack direction="horizontal" gap={3}>
-                    {Object.entries(usageState).map(([key, value]) => {
+                    {Object.entries(usageState).map(([key, value], index) => {
                         let label: string =
                             key.slice(0, 1).toUpperCase() +
                             key.slice(1).toLowerCase();
@@ -46,14 +44,15 @@ export function MachineStatusWidget() {
                             text = `${percentage}%`;
                         }
                         return (
-                            <Card style={{ width: "100%" }}>
+                            <Card style={{ width: "100%" }} key={index}>
                                 <Card.Header>{label}</Card.Header>
                                 <Card.Body>
+                                    <ProgressBar
+                                        className="mb-2"
+                                        now={percentage}
+                                        animated
+                                    />
                                     <Card.Text className="text-end">
-                                        <ProgressBar
-                                            now={percentage}
-                                            animated
-                                        />
                                         {text}
                                     </Card.Text>
                                 </Card.Body>
@@ -66,39 +65,27 @@ export function MachineStatusWidget() {
     );
 }
 
-interface TicketCountData {
-    openedAddressList: AddressInfo[];
-    activeAddressList: AddressInfo[];
-    isLoaded: boolean;
-}
-
 export function ActiveAddressWidget() {
-    const [data, setData] = useState<TicketCountData>({
-        openedAddressList: [],
-        activeAddressList: [],
-        isLoaded: false,
-    });
-    useEffect(() => {
-        async function fetchData() {
-            if (data.isLoaded) return;
+    const [numberOfActivePorts, setNumberOfActivePorts] = useState(0);
+    const [numberOfAllowedPorts, setNumberOfAllowedPorts] = useState(0);
 
-            setData({
-                openedAddressList:
-                    await APIController.instance.getOpenedAddressInfo(),
-                activeAddressList:
-                    await APIController.instance.getActiveAddressInfo(),
-                isLoaded: false,
-            });
-        }
-        fetchData();
+    useEffect(() => {
+        portAPI
+            .getActivePorts()
+            .then((ports) => setNumberOfActivePorts(ports.length));
+        portAPI
+            .listPorts()
+            .then((ports) =>
+                setNumberOfAllowedPorts(ports.filter((p) => p.is_open).length)
+            );
     });
+
     return (
         <Card className="mb-3">
             <Card.Header>활성화된 주소 현황</Card.Header>
             <Card.Body>
                 <Card.Title>
-                    {data.activeAddressList.length}/
-                    {data.openedAddressList.length} Hosts
+                    {numberOfActivePorts} / {numberOfAllowedPorts} Hosts
                 </Card.Title>
             </Card.Body>
         </Card>
@@ -106,83 +93,100 @@ export function ActiveAddressWidget() {
 }
 
 export function RecentlyOpenedAddressWidget() {
-    const data = {
-        labels: ["22", "21", "?"],
-        datasets: [
-            {
-                label: "My First Dataset",
-                data: [300, 50, 100],
-                backgroundColor: [
-                    "rgb(255, 99, 132)",
-                    "rgb(54, 162, 235)",
-                    "rgb(255, 205, 86)",
-                ],
-                hoverOffset: 4,
-            },
-        ],
-    };
+    const [ports, setPorts] = useState<Port[]>([]);
+
+    function updateRequests() {
+        portAPI
+            .listPorts()
+            .then((port) => port.filter((p) => p.is_open))
+            .then(setPorts);
+    }
+
+    useEffect(updateRequests, []);
+
     return (
         <Card className="mb-3">
             <Card.Header>신규 Open 주소</Card.Header>
             <Card.Body>
-                <Container>
-                    <Row>
-                        <Col xs="7">
-                            Data
-                        </Col>
-                        <Col xs="5">
-                        </Col>
-                    </Row>
-                </Container>
-            </Card.Body>
-        </Card>
-    );
-}
-
-interface History {
-    ipv4: string;
-    lastmod: string;
-    isSuccessful: boolean;
-}
-const histories: History[] = [
-    {
-        ipv4: "127.0.0.1",
-        lastmod: new Date().toISOString(),
-        isSuccessful: true,
-    },
-    {
-        ipv4: "localhost",
-        lastmod: new Date("2022-11-07").toISOString(),
-        isSuccessful: false,
-    },
-];
-
-export function IPChangeHistoryWidget() {
-    return (
-        <Card className="mb-3">
-            <Card.Header>최근 IP 변경 사항</Card.Header>
-            <Card.Body>
-                <ListGroup as="ul">
-                    {histories.map(createHistoryItem)}
+                <ListGroup>
+                    {ports.map((port, index) => (
+                        <ListGroup.Item key={index}>
+                            <Stack>
+                                <div className="fw-bold">
+                                    {port.ip}
+                                    <span style={{ color: "gray" }}>
+                                        :{port.port}
+                                    </span>
+                                </div>
+                            </Stack>
+                        </ListGroup.Item>
+                    ))}
                 </ListGroup>
             </Card.Body>
         </Card>
     );
 }
 
-function createHistoryItem(history: History) {
+export function IPChangeHistoryWidget() {
+    const [requests, setRequests] = useState<Request[]>([]);
+
+    useEffect(() => {
+        requestAPI.listRequests().then(setRequests);
+    }, []);
+
+    return (
+        <Card className="mb-3">
+            <Card.Header>최근 IP 변경 사항</Card.Header>
+            <Card.Body>
+                <ListGroup as="ul">{requests.map(renderRequest)}</ListGroup>
+            </Card.Body>
+        </Card>
+    );
+}
+
+function renderRequest(request: Request, index: number) {
+    const badges = {
+        approved: (
+            <Badge bg="success" pill>
+                허가됨
+            </Badge>
+        ),
+        rejected: (
+            <Badge bg="danger" pill>
+                거부됨
+            </Badge>
+        ),
+        pending: (
+            <Badge bg="warning" pill>
+                검토 대기중
+            </Badge>
+        ),
+    };
+    function getBadgeType(): "approved" | "rejected" | "pending" {
+        if (request.reviewed_at === undefined) return "pending";
+        if (request.is_approved) {
+            return "approved";
+        }
+        return "rejected";
+    }
+
     return (
         <ListGroup.Item
             as="li"
             className="d-flex justify-content-between align-items-start"
+            key={index}
         >
             <div className="ms-2 me-auto">
-                <div className="fw-bold">{history.ipv4}</div>
-                {history.lastmod}
+                <div className="fw-bold">
+                    {request.ip}
+                    <span style={{ color: "gray" }}>:{request.port}</span>
+                </div>
+                <div>
+                    <span>by {request.created_by.name}</span>
+                    <span> at {request.created_at}</span>
+                </div>
             </div>
-            <Badge bg={history.isSuccessful ? "success" : "danger"} pill>
-                {history.isSuccessful ? "성공" : "실패"}
-            </Badge>
+            {badges[getBadgeType()]}
         </ListGroup.Item>
     );
 }
