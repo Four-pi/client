@@ -1,33 +1,25 @@
-import { useEffect, useState } from "react";
-import { ListGroup, Stack } from "react-bootstrap";
-import { User, UserAPI, UserMockAPI } from "../../apis/user";
-
-const userApi: UserAPI = new UserMockAPI();
+import { Col, Container, Row } from "react-bootstrap";
+import { UserList } from "../../components/user-list";
+import { UserAdd } from "../../components/user-add";
 
 export function UserListPage() {
-    const [users, setUsers] = useState<User[]>([]);
-
-    function updateUsers() {
-        userApi.listUsers().then((users) => setUsers(users.slice()));
-    }
-
-    useEffect(updateUsers, []);
-
     return (
-        <ListGroup>
-            {users.map((user, index) => (
-                <ListGroup.Item key={index}>
-                    <Stack direction="horizontal" gap={3}>
-                        <div>
-                            {user.name}{" "}
-                            <span style={{ color: "gray" }}>
-                                @{user.department}
-                            </span>
-                        </div>
-                        <div>({user.id})</div>
-                    </Stack>
-                </ListGroup.Item>
-            ))}
-        </ListGroup>
+        <Container>
+            <Row className="my-3">
+                <Col>
+                    <h2>사용자 관리/계정 목록 보기</h2>
+                </Col>
+            </Row>
+            <Row className="mb-3">
+                <Col>
+                    <UserList />
+                </Col>
+            </Row>
+            <Row className="mb-3">
+                <Col>
+                    <UserAdd />
+                </Col>
+            </Row>
+        </Container>
     );
 }

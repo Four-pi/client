@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import { Card, Col, Container, ListGroup, Row } from "react-bootstrap";
-import { Port, PortAPI, PortMockAPI } from "../../apis/port";
-import { PortStatusBadge } from "../../components/badges";
-
-const portApi: PortAPI = new PortMockAPI();
+import type { Port } from "../../models/base";
+import * as apis from "../../apis";
+import { PortStatusBadge } from "../../components/port-status-badge";
 
 // TODO: request api를 이용하여 getActivePort 만으로 알잘딱하기.
 
 export function PortListPage() {
     return (
-        <Container fluid>
-            <Row className="p-3">
-                <h2>포트 관리/포트 상태 보기</h2>
+        <Container>
+            <Row className="my-3">
+                <Col>
+                    <h2>포트 관리/포트 목록 보기</h2>
+                </Col>
             </Row>
             <Row className="mb-3">
                 <Col>
@@ -32,8 +33,10 @@ function PortList() {
     const [portsOffline, setPortsOffline] = useState<Port[]>([]);
 
     async function updatePorts() {
-        const portsOnline = (await portApi.getActivePorts()).slice();
-        const portsOffline = (await portApi.listPorts()).filter(port => !includesPort(portsOnline, port));
+        const portsOnline = (await apis.portApi.getActivePorts()).slice();
+        const portsOffline = (await apis.portApi.listPorts()).filter(
+            (port) => !includesPort(portsOnline, port)
+        );
         setPortsOnline(portsOnline);
         setPortsOffline(portsOffline);
     }
@@ -41,7 +44,6 @@ function PortList() {
     useEffect(() => {
         updatePorts();
     }, []);
-
 
     return (
         <ListGroup>
@@ -54,7 +56,7 @@ function PortList() {
                         {port.ip}
                         <span style={{ color: "gray" }}>:{port.port}</span>
                     </div>
-                    <PortStatusBadge status={port.is_open ? "online-authenticated" : "online-unknown"} />
+                    <PortStatusBadge isOnline isAuthenticated={port.is_open} />
                 </ListGroup.Item>
             ))}
             {portsOffline.map((port, index) => (
@@ -66,7 +68,7 @@ function PortList() {
                         {port.ip}
                         <span style={{ color: "gray" }}>:{port.port}</span>
                     </div>
-                    <PortStatusBadge status="offline" />
+                    <PortStatusBadge isAuthenticated={port.is_open} />
                 </ListGroup.Item>
             ))}
         </ListGroup>
@@ -74,5 +76,8 @@ function PortList() {
 }
 
 function includesPort(portList: Port[], port: Port): boolean {
-    return portList.find(p => p.ip === port.ip && p.port === port.port) !== undefined;
+    return (
+        portList.find((p) => p.ip === port.ip && p.port === port.port) !==
+        undefined
+    );
 }

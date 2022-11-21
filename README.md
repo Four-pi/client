@@ -12,31 +12,17 @@
 classDiagram
     direction TD
 
-    class Department {
-        <<부서>>
-
-        +id: int PK
-
-        +name: string
-        +company: string "naver.com"
-    }
-
-    Department "1" o-- "N" User
-
     class User {
         <<사용자>>
 
         +id: int PK
-
-        +department_id: int
-
         +password: string
-        +joined_date: string
-        +is_admin: boolean
+        -name: string
 
-        -name?: string
+        +department: string
+        +created_at: string
+
         -mail?: string
-        -contact?: string
     }
 
     class Port {
@@ -45,29 +31,23 @@ classDiagram
         +is_open: boolean
     }
 
-    class PendingPortOpenRequests {
-        +auth_id: int FK
-    }
-
     class ReviewedPortOpenRequests {
-        +auth_id: int FK
+        +port_open_request_id: int FK
         +is_approved: boolean
         +reviewer_id: int
-        +date: string
+        +reviewed_at: string
     }
 
-    PendingPortOpenRequests o-- PortOpenRequest
     ReviewedPortOpenRequests o-- PortOpenRequest
 
     class PortOpenRequest {
-        +id: int PK
+        +id: int PK AUTOINCREMENT
 
         +user_id: int
-        +date: string
+        +created_at: string
 
         +ip: string
         +port: int
-
         +usage: string
     }
 
@@ -77,20 +57,18 @@ classDiagram
     }
 
     class NmapReport {
-        +id: int PK
+        +id: int PK AUTOINCREMENT
 
         +ip: string
         +subnet_mask: int
 
-        +date: string
-        +duration: string
-        +latency: string
+        +created_at: string
     }
 
     NmapReport "1" o-- "N" NampIPReport
 
     class NampIPReport {
-        +id: int PK
+        +id: int PK AUTOINCREMENT
 
         +nmap_report_id: int FK
         +ip: string
@@ -103,9 +81,9 @@ classDiagram
         +nmap_ip_report_id: int FK PK
         +port: int PK
 
-        +protocol: string (tcp | udp)
-        +service: string (http | rtsp | ...)
-        +version: string (어플리케이션 이름이 들어가기도 함. 가끔 버전 미포함)
+        +protocol: string
+        +service: string
+        +version: string
     }
 ```
 

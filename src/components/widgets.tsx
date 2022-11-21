@@ -2,21 +2,12 @@ import { useEffect, useState } from "react";
 import {
     Badge,
     Card,
-    Col,
-    Container,
     ListGroup,
-    ProgressBar,
-    Row,
     Stack,
 } from "react-bootstrap";
-import type { MachineStatus, MachineStatusAPI } from "../apis/machine";
-import { MachineStatusMockAPI } from "../apis/machine";
-import { Port, PortAPI, PortMockAPI } from "../apis/port";
-import { Request, RequestAPI, RequestMockAPI } from "../apis/request";
-
-const machineStatusAPI: MachineStatusAPI = new MachineStatusMockAPI();
-const portAPI: PortAPI = new PortMockAPI();
-const requestAPI: RequestAPI = new RequestMockAPI();
+import type { MachineStatus, Port, Request } from "../models/base";
+import * as apis from "../apis";
+import { MachineStatusCard } from "./machineStatus";
 
 export function MachineStatusWidget() {
     const [usageState, setUsageState] = useState<MachineStatus>({
@@ -26,67 +17,17 @@ export function MachineStatusWidget() {
         network: undefined,
     });
     useEffect(() => {
-        machineStatusAPI.monitor().then(setUsageState);
-    });
+        apis.machineStatusApi.monitor().then(setUsageState);
+    }, [
+        usageState
+    ]);
     return (
         <Card className="mb-3">
             <Card.Header>장치 부하 상태</Card.Header>
             <Card.Body>
                 <Stack direction="horizontal" gap={3}>
-                    {Object.entries(usageState).map(([key, value], index) => {
-                        let label: string =
-                            key.slice(0, 1).toUpperCase() +
-                            key.slice(1).toLowerCase();
-                        let text: string = "로딩 중...";
-                        let percentage = 100;
-                        if (value !== undefined) {
-                            percentage = Math.ceil(value * 100);
-                            text = `${percentage}%`;
-                        }
-                        return (
-                            <Card style={{ width: "100%" }} key={index}>
-                                <Card.Header>{label}</Card.Header>
-                                <Card.Body>
-                                    <ProgressBar
-                                        className="mb-2"
-                                        now={percentage}
-                                        animated
-                                    />
-                                    <Card.Text className="text-end">
-                                        {text}
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        );
-                    })}
+                    <MachineStatusCard status={usageState} />
                 </Stack>
-            </Card.Body>
-        </Card>
-    );
-}
-
-export function ActiveAddressWidget() {
-    const [numberOfActivePorts, setNumberOfActivePorts] = useState(0);
-    const [numberOfAllowedPorts, setNumberOfAllowedPorts] = useState(0);
-
-    useEffect(() => {
-        portAPI
-            .getActivePorts()
-            .then((ports) => setNumberOfActivePorts(ports.length));
-        portAPI
-            .listPorts()
-            .then((ports) =>
-                setNumberOfAllowedPorts(ports.filter((p) => p.is_open).length)
-            );
-    });
-
-    return (
-        <Card className="mb-3">
-            <Card.Header>활성화된 주소 현황</Card.Header>
-            <Card.Body>
-                <Card.Title>
-                    {numberOfActivePorts} / {numberOfAllowedPorts} Hosts
-                </Card.Title>
             </Card.Body>
         </Card>
     );
@@ -96,7 +37,7 @@ export function RecentlyOpenedAddressWidget() {
     const [ports, setPorts] = useState<Port[]>([]);
 
     function updateRequests() {
-        portAPI
+        apis.portApi
             .listPorts()
             .then((port) => port.filter((p) => p.is_open))
             .then(setPorts);
@@ -131,7 +72,7 @@ export function IPChangeHistoryWidget() {
     const [requests, setRequests] = useState<Request[]>([]);
 
     useEffect(() => {
-        requestAPI.listRequests().then(setRequests);
+        apis.requestApi.listRequests().then(setRequests);
     }, []);
 
     return (

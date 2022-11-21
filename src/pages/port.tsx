@@ -78,7 +78,7 @@ export class Port extends React.Component<any, { portOptions: PortOption[] }> {
 
     render() {
         return (
-            <Container fluid>
+            <Container>
                 <Row className="p-3">
                     <h2>허용된 포트 관리</h2>
                 </Row>

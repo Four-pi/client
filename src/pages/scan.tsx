@@ -122,25 +122,47 @@ export class Scan extends React.Component<any, { reports: NmapScanReport[] }> {
     render() {
         const { reports } = this.state;
         return (
-            <Container fluid>
+            <Container>
                 <Row className="p-3">
-                    <h2>스캔 기록</h2>
+                    <Col>
+                        <h2>스캔 기록</h2>
+                    </Col>
                 </Row>
                 <Row className="mb-3">
-                    <Pagination className="p-3">
-                        <Pagination.Item key={1} active>
-                            2022-11-14
-                        </Pagination.Item>
-                        <Pagination.Item key={2}>2022-11-13 19:01:00</Pagination.Item>
-                        <Pagination.Item key={2}>2022-11-13 06:55:07</Pagination.Item>
-                        <Pagination.Item key={3}>2022-11-12</Pagination.Item>
-                        <Pagination.Item key={4}>2022-11-11</Pagination.Item>
-                        <Pagination.Item key={5}>2022-11-10</Pagination.Item>
-                        <Pagination.Item key={6}>2022-11-09</Pagination.Item>
-                        <Pagination.Item key={7}>2022-11-08</Pagination.Item>
-                        <Pagination.Item key={8}>2022-11-07</Pagination.Item>
-                        <Pagination.Item key={9}>2022-11-06</Pagination.Item>
-                    </Pagination>
+                    <Col>
+                        <Pagination className="p-3">
+                            <Pagination.Item key={1} active>
+                                2022-11-14
+                            </Pagination.Item>
+                            <Pagination.Item key={2}>
+                                2022-11-13 19:01:00
+                            </Pagination.Item>
+                            <Pagination.Item key={2}>
+                                2022-11-13 06:55:07
+                            </Pagination.Item>
+                            <Pagination.Item key={3}>
+                                2022-11-12
+                            </Pagination.Item>
+                            <Pagination.Item key={4}>
+                                2022-11-11
+                            </Pagination.Item>
+                            <Pagination.Item key={5}>
+                                2022-11-10
+                            </Pagination.Item>
+                            <Pagination.Item key={6}>
+                                2022-11-09
+                            </Pagination.Item>
+                            <Pagination.Item key={7}>
+                                2022-11-08
+                            </Pagination.Item>
+                            <Pagination.Item key={8}>
+                                2022-11-07
+                            </Pagination.Item>
+                            <Pagination.Item key={9}>
+                                2022-11-06
+                            </Pagination.Item>
+                        </Pagination>
+                    </Col>
                 </Row>
                 <Row className="mb-3">
                     <Col xs={8}>

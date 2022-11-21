@@ -3,20 +3,17 @@ import {
     Card,
     Col,
     Container,
-    ListGroup,
     Row,
-    Stack,
     Table,
 } from "react-bootstrap";
-import { Request, RequestAPI, RequestMockAPI } from "../../../apis/request";
-
-const requestApi: RequestAPI = new RequestMockAPI();
+import type { Request } from "../../../models/base";
+import * as apis from "../../../apis";
 
 export function ReviewedPortRequestPage() {
     const [requests, setRequests] = useState<Request[]>([]);
 
     function updateRequests() {
-        requestApi
+        apis.requestApi
             .listRequests()
             .then((requests) =>
                 requests.filter((req) => req.is_approved !== undefined)
