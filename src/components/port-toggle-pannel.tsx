@@ -4,7 +4,7 @@ import { portApi } from "../apis";
 import { Port } from "../models/base";
 import { PortStatusBadge } from "./port-status-badge";
 
-export function PortTogglePanel() {
+export function PortTogglePannel() {
     const [onlinePorts, setOnlinePorts] = useState<Port[]>([]);
     const [offlinePorts, setOfflinePorts] = useState<Port[]>([]);
 

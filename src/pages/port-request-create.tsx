@@ -1,17 +1,17 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { PendingPortRequests } from "../../../components/port-request-pending-list";
+import { PortRequestCreate } from "../components/port-request-create";
 
-export function PendingPortRequestPage() {
+export function PortRequestCreatePage() {
     return (
         <Container>
             <Row className="p-3">
                 <Col>
-                    <h2>처리 대기중인 요청 보기</h2>
+                    <h2>포트 사용 요청/요청 생성하기</h2>
                 </Col>
             </Row>
             <Row className="mb-3">
                 <Col>
-                    <PendingPortRequests />
+                    <PortRequestCreate />
                 </Col>
             </Row>
         </Container>

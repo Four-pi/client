@@ -1,14 +1,14 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ScanSettingsPage } from "./pages/scan/settings";
+import { ScanSettingsPage } from "./pages/scan-settings";
 import { MainPage } from "./pages/main";
-import { ScanReportsPage } from "./pages/scan/reports";
-import { PortListPage } from "./pages/port/list";
-import { PortSettingsPage } from "./pages/port/settings";
-import { UserListPage } from "./pages/user/list";
-import { ReviewedPortRequestPage } from "./pages/port/request/reviewed";
-import { PendingPortRequestPage } from "./pages/port/request/pending";
-import { PortRequestCreatePage } from "./pages/port/request/create";
+import { ScanReportsPage } from "./pages/scan-reports";
+import { PortListPage } from "./pages/port-list";
+import { PortSettingsPage } from "./pages/port-settings";
+import { UserListPage } from "./pages/user-list";
+import { ReviewedPortRequestPage } from "./pages/port-request-reviewed";
+import { PendingPortRequestPage } from "./pages/port-request-pending";
+import { PortRequestCreatePage } from "./pages/port-request-create";
 
 export interface RouteItem {
     label: string;

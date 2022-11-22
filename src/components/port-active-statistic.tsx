@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 import { portApi } from "../apis";
 import { Port } from "../models/base";
 
-export function ActiveHosts() {
+export function ActivePortStatistic() {
     const [ports, setPorts] = useState<Port[]>([]);
     const [activePorts, setActivePorts] = useState<Port[]>([]);
 

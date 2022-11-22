@@ -1,17 +1,17 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { ReportList } from "../../components/report-list";
+import { PendingPortRequests } from "../components/port-request-pending-list";
 
-export function ScanReportsPage() {
+export function PendingPortRequestPage() {
     return (
         <Container>
-            <Row className="my-3">
+            <Row className="p-3">
                 <Col>
-                    <h2>스캔 기록</h2>
+                    <h2>처리 대기중인 요청 보기</h2>
                 </Col>
             </Row>
             <Row className="mb-3">
                 <Col>
-                    <ReportList />
+                    <PendingPortRequests />
                 </Col>
             </Row>
         </Container>

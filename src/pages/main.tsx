@@ -1,31 +1,28 @@
 import { Col, Container, Row, Stack } from "react-bootstrap";
-import {
-    MachineStatusWidget,
-    RecentlyOpenedAddressWidget,
-    IPChangeHistoryWidget,
-} from "../components/widgets";
-import { ActiveHosts } from "../components/active-hosts";
+import { ActivePortStatistic } from "../components/port-active-statistic";
+import { MachineMonitoring } from "../components/machine-monitoring";
+import { PortRequestList } from "../components/port-request-list";
+import { PortList } from "../components/port-list";
 
 export function MainPage() {
     return (
-
         <Container className="mt-3" fluid>
             <Row>
                 <Col xs={6}>
                     <Stack gap={3}>
-                        <ActiveHosts />
-                        <IPChangeHistoryWidget />
+                        <ActivePortStatistic />
+                        <PortList />
                     </Stack>
                 </Col>
                 <Col xs={6}>
-                    <RecentlyOpenedAddressWidget />
+                    <PortRequestList />
                 </Col>
             </Row>
             <Row>
                 <Col xs={12}>
-                    <MachineStatusWidget />
+                    <MachineMonitoring />
                 </Col>
             </Row>
         </Container>
-    )
+    );
 }

@@ -6,7 +6,7 @@ interface AddressProps {
 
 export function Address({ ip, port, subnetMask }: AddressProps) {
     return (
-        <span>
+        <span className="fw-bold">
             <Ip>{ip}</Ip>
             <Port>{port}</Port>
             <SubnetMask>{subnetMask}</SubnetMask>

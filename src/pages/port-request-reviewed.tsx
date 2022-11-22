@@ -6,8 +6,8 @@ import {
     Row,
     Table,
 } from "react-bootstrap";
-import type { Request } from "../../../models/base";
-import * as apis from "../../../apis";
+import type { Request } from "../models/base";
+import * as apis from "../apis";
 
 export function ReviewedPortRequestPage() {
     const [requests, setRequests] = useState<Request[]>([]);
