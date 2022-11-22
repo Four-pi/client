@@ -374,22 +374,36 @@ flowchart
 
 # Design
 
+설계
+
 ## Flowchart
 
 ### 로그인
 
 ```mermaid
 flowchart
-    c1("로그인")
-    --> c2["네비게이션 바 우측 '로그인' 버튼 클릭"]
-    --> c3["로그인 모달 창 노출"]
-    --> c4["로그인 폼 작성"]
-    --> c5["로그인 버튼 클릭"]
-    -."api 서버로 정보 전송".->  s1[/"동일 회원 아이디/비밀번호 검색"/]
-    -.-> s2[("User DB")]
-    -.-> s3{"일치하는 회원이 있는가?"}
-    s3 -- "N" --> c3
-    s3 -- "Y" --> c6["페이지 새로고침"]
+    start("로그인")
+    checkLoginInfo{"로컬 스토리지에 저장된 로그인 정보가 있는가?"}
+    showAdminMenus["관리자에게 허용된 항목들 노출"]
+    showLoginButton["네비게이션 바 우측에 '로그인' 버튼 노출"]
+    userClickLoginButton["사용자가 '로그인' 버튼 클릭"]
+    showLoginModal["로그인 모달 창 노출"]
+    userFillLoginForm["로그인 폼 작성"]
+    userClickLoginSubmitButton["로그인 버튼 클릭"]
+    searchMatchingUser[/"동일 회원 아이디/비밀번호 검색"/]
+    userDB[("User DB")]
+    checkMatchUserFound{"일치하는 회원이 있는가?"}
+    approveLogin["로그인 승인"]
+    rejectLogin["로그인 거부"]
+    sendLoginInfo["api 서버로 로그인 정보 전송"]
+    saveLoginInfo["로컬 스토리지에 로그인 정보 저장"]
+    removeLoginInfo["로컬 스토리지에 로그인 정보 제거"]
+
+    start --> checkLoginInfo
+    checkLoginInfo -- "Y" --> sendLoginInfo
+    checkLoginInfo -- "N" --> showLoginButton --> userClickLoginButton --> showLoginModal --> userFillLoginForm --> userClickLoginSubmitButton --> sendLoginInfo -. "POST /user" .-> searchMatchingUser -.-> userDB -.-> checkMatchUserFound
+    checkMatchUserFound -. "Y" .-> approveLogin -. "클라이언트로 로그인 성공 전달" .-> saveLoginInfo --> showAdminMenus
+    checkMatchUserFound -. "N" .-> rejectLogin -. "클라이언트로 로그인 실패 전달" .-> removeLoginInfo
 ```
 
 ## Permission
