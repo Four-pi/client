@@ -151,9 +151,6 @@ erDiagram
 
     PortOpenRequest ||--o| ReviewedPortOpenRequest : "하나의 요청은 하나의 검토된 요청이 될 수 있음"
 
-    Report ||--o{ IPReport : "하나의 리포트 안에 여러 아이피들에 대한 개별 리포트가 존재함"
-    IPReport ||--o{ PortReport : "하나의 아이피 리포트는 여러 포트 리포트로 구성됨"
-
     Department {
         int id PK "AUTOINCREMEN, 부서 고유 아이디"
         string name PK "부서명"
@@ -167,12 +164,6 @@ erDiagram
         int department FK "사용자의 부서 Depertment.id"
         string mail "(선택) 사용자의 이메일"
         date created_at "이 사용자가 추가된 날짜와 시각"
-    }
-
-    Port {
-        string ip PK "아이피 주소"
-        string port PK "포트 주소"
-        boolean is_open "해당 포트가 활성화 되어있는지 여부"
     }
 
     PortOpenRequest {
@@ -190,11 +181,26 @@ erDiagram
         date reviwed_at "이 요청이 리뷰된 날짜와 시각"
         boolean is_approved "이 요청이 승낙되었는지 여부. 이 값이 false면 거절된 요청이다."
     }
+```
 
+```mermaid
+erDiagram
     ScanTarget {
         string ip PK "스캔 대상인 아이피 주소"
         string subnet_mask PK "스캔 대상인 서브넷마스크"
     }
+
+    Port {
+        string ip PK "아이피 주소"
+        string port PK "포트 주소"
+        boolean is_open "해당 포트가 활성화 되어있는지 여부"
+    }
+```
+
+```mermaid
+erDiagram
+    Report ||--o{ IPReport : "하나의 리포트 안에 여러 아이피들에 대한 개별 리포트가 존재함"
+    IPReport ||--o{ PortReport : "하나의 아이피 리포트는 여러 포트 리포트로 구성됨"
 
     Report {
         int id PK "AUTOINCREMENT, 리포트별 아이디, 서브넷마스크를 이용하므로 여러개의 아이피주소에 대한 스캔은 이 아이디를 공유함."
