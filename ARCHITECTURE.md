@@ -550,3 +550,21 @@ flowchart
         </tr>
     </tbody>
 </table>
+
+# [Back-End] API 명세
+
+RESTful 을 지향하며 최대한 CRUD[^crud] 작업을 포함하도록 각 api를 설계하였다.
+
+개발 기간이 충분하지 못해 설계가 미흡하고, 일부 구현되지 않은 api들이 있다.
+
+## User
+
+## Port
+
+## Request
+
+## Report
+
+## Scan
+
+[^crud]: Create, Read, Update, Delete
