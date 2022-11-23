@@ -96,28 +96,27 @@ export function ReportList() {
                         </Pagination>
                         <Card>
                             <Card.Body>
-                                <Stack direction="horizontal">
-                                    <div style={{ width: "100%" }}>
-                                        <ListGroup>
-                                            {simplifiedReports.map(
-                                                (report, index) => (
-                                                    <ListGroup.Item key={index}>
-                                                        {renderSimplifiedReport(
-                                                            report
-                                                        )}
-                                                    </ListGroup.Item>
-                                                )
-                                            )}
-                                        </ListGroup>
-                                    </div>
-                                    <div>
-                                        <Doughnut data={chartData} />
-                                    </div>
-                                </Stack>
                                 <Container fluid>
                                     <Row>
-                                        <Col xs={8}></Col>
-                                        <Col xs={4}></Col>
+                                        <Col xs={8}>
+                                            <ListGroup>
+                                                {simplifiedReports.map(
+                                                    (report, index) => (
+                                                        <ListGroup.Item
+                                                            key={index}
+                                                        >
+                                                            {renderSimplifiedReport(
+                                                                report
+                                                            )}
+                                                        </ListGroup.Item>
+                                                    )
+                                                )}
+                                            </ListGroup>
+                                        </Col>
+
+                                        <Col xs={4}>
+                                            <Doughnut data={chartData} />
+                                        </Col>
                                     </Row>
                                 </Container>
                             </Card.Body>
