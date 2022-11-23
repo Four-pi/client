@@ -17,62 +17,74 @@ export interface RouteItem {
     adminOnly?: boolean;
 }
 
-export class Router extends React.Component {
-    static routes: RouteItem[] = [
-        {
-            label: "대시보드",
-            path: "/",
-            element: <MainPage />,
-        },
-        {
+export const sitemap = {
+    dashboard: {
+        label: "대시보드",
+        path: "/",
+        element: <MainPage />,
+    },
+    scan: {
+        report: {
             label: "스캔 기록 보기",
             path: "/scan/log",
             element: <ScanReportsPage />,
         },
-        {
+        settings: {
             label: "스캔 설정",
             path: "/scan/settings",
-            element: <ScanSettingsPage />
+            element: <ScanSettingsPage />,
         },
-        {
+    },
+    port: {
+        list: {
             label: "포트 상태 보기",
             path: "/port/list",
-            element: <PortListPage />
+            element: <PortListPage />,
         },
-        {
+        settings: {
             label: "포트 설정",
             path: "/port/settings",
-            element: <PortSettingsPage />
+            element: <PortSettingsPage />,
         },
-        {
-            label: "포트 사용 요청 생성",
-            path: "/port/request/create",
-            element: <PortRequestCreatePage />
+        request: {
+            create: {
+                label: "포트 사용 요청 생성",
+                path: "/port/request/create",
+                element: <PortRequestCreatePage />,
+            },
+            reviewed: {
+                label: "처리된 요청 보기",
+                path: "/port/request/reviewed",
+                element: <ReviewedPortRequestPage />,
+            },
+            pending: {
+                label: "처리 대기중인 요청 보기",
+                path: "/port/request/pending",
+                element: <PendingPortRequestPage />,
+            },
         },
-        {
-            label: "처리된 요청 보기",
-            path: "/port/request/reviewed",
-            element: <ReviewedPortRequestPage />
-        },
-        {
-            label: "처리 대기중인 요청 보기",
-            path: "/port/request/pending",
-            element: <PendingPortRequestPage />
-        },
-        // {
-        //     label: "계정 추가하기",
-        //     path: "/user/create",
-        // },
-        {
+    },
+    user: {
+        list: {
             label: "계정 목록 보기",
             path: "/user/list",
-            element: <UserListPage />
+            element: <UserListPage />,
         },
-    ];
+    },
+};
 
-    private browserRouter = createBrowserRouter(Router.routes);
+export function Router() {
+    const browserRouter = createBrowserRouter([
+        sitemap.dashboard,
+        sitemap.port.request.create,
+        sitemap.port.request.pending,
+        sitemap.port.request.reviewed,
+        sitemap.port.list,
+        sitemap.port.settings,
+        sitemap.scan.report,
+        sitemap.scan.settings,
+        sitemap.user.list,
+    ]);
 
-    render() {
-        return <RouterProvider router={this.browserRouter} />;
-    }
+    return <RouterProvider router={browserRouter} />;
 }
