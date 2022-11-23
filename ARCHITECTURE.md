@@ -559,6 +559,116 @@ RESTful 을 지향하며 최대한 CRUD[^crud] 작업을 포함하도록 각 api
 
 ## User
 
+사용자에 대한 API
+
+### Create User
+
+```
+POST /user
+```
+
+#### Request parameters
+
+##### `id` <sub>string required</sub>
+
+> 새로 생성할 사용자의 아이디
+
+##### `password` <sub>string required</sub>
+
+> 새로 생성할 사용자의 비밀번호
+
+##### `name` <sub>string required</sub>
+
+> 새로 생성할 사용자의 이름
+
+##### `department` <sub>string required</sub>
+
+> 새로 생성할 사용자의 부서명
+
+##### `mail` <sub>string</sub>
+
+> 새로 생성할 사용자의 이메일 주소
+
+#### Response
+
+##### 유저 생성 성공 시
+
+유저 생성에 성공하면 해당 유저 정보를 반환한다.
+유저 정보에는 아이디, 이름, 부서명, 계정 생성일(, 이메일)의 정보가 포함되어야 한다.
+
+```json
+{
+    "id": "admin",
+    "name": "관리자명",
+    "department": "IT개발부",
+    "created_at": "2008-01-14T04:33:35Z",
+    "mail": "admin@example.com",
+}
+```
+
+##### 유저 생성 실패 시
+
+유저 생성에 실패하면 아무것도 반환하지 않는다.
+
+```json
+null
+```
+
+### List User
+
+```
+GET /user/list
+```
+
+전체 사용자
+
+#### Request parameters
+
+없음
+
+#### Response
+
+사용자 정보들이 담긴 배열을 반환한다.
+아무 사용자가 존재하지 않는 경우에는 빈 배열을 반환한다.
+
+```json
+[
+    {
+        "id": "admin",
+        "name": "관리자명",
+        "department": "IT개발부",
+        "created_at": "2008-01-14T04:33:35Z",
+        "mail": "admin@example.com",
+    },
+    {
+        "id": "test-user",
+        "name": "사용자명",
+        "department": "테스트부",
+        "created_at": "2008-01-14T04:33:35Z",
+    }
+]
+```
+
+### Auth User (login)
+
+```
+POST /user/auth
+```
+
+아이디와 비밀번호를 입력하여 현재 접속한 사용자를 로그인 한 상태인 것으로 서버가 기억하도록 한다.
+
+#### Request parameters
+
+##### `id` <sub>string required</sub>
+
+> 로그인 할 사용자의 아이디
+
+##### `password` <sub>string required</sub>
+
+> 로그인 할 사용자의 비밀번호
+
+
+
 ## Port
 
 ## Request
