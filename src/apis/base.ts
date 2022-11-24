@@ -22,17 +22,17 @@ export type FourPiAPI = {
             create: (ip: string, port: string, usage: string) => Promise<Request | undefined>;
             get: (id: string) => Promise<Request | undefined>;
             list: () => Promise<Request[]>;
-            approve: (id: string) => Promise<boolean>;
-            reject: (id: string) => Promise<boolean>;
+            approve: (id: string) => Promise<Request | undefined>;
+            reject: (id: string) => Promise<Request | undefined>;
         }
     },
     scan: {
         target: {
-            create: (ip: string, subnetMask: string | undefined) => Promise<ScanTarget | ScanTarget>;
+            create: (ip: string, subnetMask: string | undefined) => Promise<ScanTarget | undefined>;
             list: () => Promise<ScanTarget[]>;
         },
         report: {
-            create: () => Promise<any>;
+            create: () => Promise<void>;
             get: (id: string) => Promise<Report | undefined>;
             list: () => Promise<Report[]>;
         }

@@ -54,7 +54,7 @@ export const restAPI: FourPiAPI = {
             return await client.get('/Port/list').then(res => res.data ?? []);
         },
         request: {
-            create: async function (ip: string, port: string, usage: string): Promise<any> {
+            create: async function (ip: string, port: string, usage: string): Promise<Request | undefined> {
                 return await client.post('/create/request', {
                     ip,
                     port,
@@ -67,10 +67,10 @@ export const restAPI: FourPiAPI = {
             list: async function (): Promise<Request[]> {
                 return await client.get('/list/request').then(res => res.data);
             },
-            approve: async function (id: string): Promise<boolean> {
+            approve: async function (id: string): Promise<Request | undefined> {
                 return await client.get('/request/auth/' + id).then(res => res.data);
             },
-            reject: async function (id: string): Promise<boolean> {
+            reject: async function (id: string): Promise<Request | undefined> {
                 return await client.get('/request/reject/' + id).then(res => res.data);
             }
         }
@@ -92,7 +92,7 @@ export const restAPI: FourPiAPI = {
             },
         },
         report: {
-            create: async function (): Promise<any> {
+            create: async function (): Promise<void> {
                 await client.get('/Scan');
             },
             get: async function (id: string): Promise<Report | undefined> {

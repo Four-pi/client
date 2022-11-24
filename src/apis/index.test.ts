@@ -1,5 +1,5 @@
 import { api, setLoggerFunction } from ".";
-import { isPort, isPortRequest, isReviewedPortRequest, isScanReport, isScanTarget, isUser } from "../models/base";
+import { isPort, isPortRequest, isReviewedPortRequest, isReport, isScanTarget, isUser } from "../models/base";
 
 function generateRandomString(): string {
     return Math.random().toString().slice(2, 10);
@@ -318,7 +318,7 @@ describe('/scan', () => {
 
             test("목록의 요소가 스캔 리포트인가", async () => {
                 const reports = await api.scan.report.list();
-                expect(reports.every(isScanReport)).toBeTruthy();
+                expect(reports.every(isReport)).toBeTruthy();
             });
 
         });
@@ -341,7 +341,7 @@ describe('/scan', () => {
             test("목록에 있는 요소를 개별적으로 가져올 수 있는가", async () => {
                 const reportInList = await api.scan.report.list().then(reports => reports![0]);
                 const report = await api.scan.report.get(reportInList.id);
-                expect(isScanReport(report)).toBeTruthy();
+                expect(isReport(report)).toBeTruthy();
                 expect(report!.id).toBe(reportInList.id);
             });
 
