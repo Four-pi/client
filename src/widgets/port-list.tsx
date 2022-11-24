@@ -5,23 +5,40 @@ import { sitemap } from "../router";
 import { DisplayAddress } from "../components/address";
 import { RequireLogin } from "../components/require-login";
 import { fetchAddress, listAddress } from "../models/address-status";
+import { ConditionalComponent } from "../components/conditional-component";
 
 export function PortList({ max }: { max?: number }) {
     const [updateSignal, setUpdateSignal] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
 
     function update() {
         setUpdateSignal(!updateSignal);
     }
 
+    const onExpandHander = () => {
+        setIsCollapsed(false);
+    };
+
     useEffect(() => {
         fetchAddress().then(update);
-    });
+    }, [updateSignal]);
+
+    const addressList = listAddress();
+    const revealedAddressList = isCollapsed
+        ? addressList.slice(0, max)
+        : addressList;
+    const countHiddenAddress = addressList.length - revealedAddressList.length;
 
     return (
         <Card>
             <Card.Header>
                 <Stack direction="horizontal">
                     <div>포트 목록</div>
+                    <ConditionalComponent condition={isCollapsed}>
+                        <a href="#" onClick={onExpandHander}>
+                            펼치기
+                        </a>
+                    </ConditionalComponent>
                     <RequireLogin>
                         <div className="ms-auto">
                             <a href={sitemap.port.settings.path}>설정</a>
@@ -31,7 +48,7 @@ export function PortList({ max }: { max?: number }) {
             </Card.Header>
             <Card.Body>
                 <ListGroup>
-                    {listAddress().slice(0, max).map((address, index) => (
+                    {revealedAddressList.map((address, index) => (
                         <ListGroup.Item key={index}>
                             <Stack direction="horizontal">
                                 <div>
@@ -49,16 +66,18 @@ export function PortList({ max }: { max?: number }) {
                             </Stack>
                         </ListGroup.Item>
                     ))}
-                    { max && listAddress().length > max ? (
-                        <ListGroup.Item>
-                            <Stack direction="horizontal">
-                            <span>... {listAddress().length - max}개 생략 됨</span>
-                            </Stack>
-                        </ListGroup.Item>
-                    ) : null }
                 </ListGroup>
             </Card.Body>
-            <Card.Footer>서버에 알려진 모든 포트 목록입니다</Card.Footer>
+            <Card.Footer>
+                <Stack direction="horizontal">
+                    <div>서버에 알려진 모든 포트 목록입니다</div>
+                    {isCollapsed ? (
+                        <div className="ms-auto">
+                            <span> (... {countHiddenAddress}개 생략 됨) </span>
+                        </div>
+                    ) : null}
+                </Stack>
+            </Card.Footer>
         </Card>
     );
 }
