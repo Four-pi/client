@@ -1,44 +1,53 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Row, Stack } from "react-bootstrap";
+import { Card, Col, Container, Pagination, Row, Stack } from "react-bootstrap";
 import { fetchAddress, listReport } from "../models/core";
 import type { Report } from "../models/base";
 import { ReportChart } from "../components/report-chart";
 import { ReportList } from "../components/report-list";
-import { ReportListPagination } from "../components/report-list-pagination";
-import { RequireLogin } from "../components/require-login";
+import { RequiresLoggedIn } from "../components/conditional-component";
+import { ConditionalComponent } from "../components/conditional-component";
 
 export function ReportChartedList() {
-    const [selectedReport, setSelectedReport] = useState<Report | undefined>(
-        undefined
-    );
+    const [reportList, setReportList] = useState<Report[]>([]);
+    const [selectedReportIdx, setSelectedReportIdx] = useState(0);
 
     useEffect(() => {
         fetchAddress().then(() => {
-            setSelectedReport(listReport()?.[0]);
+            setReportList(listReport());
         });
-    });
+    }, []);
+
+    const onPageSelectHandlerFactory = (index: number) => () => {
+        setSelectedReportIdx(index);
+    };
+
+    const selectedReport = reportList.length > selectedReportIdx ? reportList[selectedReportIdx] : undefined;
 
     return (
         <Card>
             <Card.Header>
                 <Stack direction="horizontal">
                     날짜별 스캔 기록
-                    <RequireLogin>
+                    <RequiresLoggedIn>
                         <div className="ms-auto">
                             <a href="/scan/settings">스캔 설정</a>
                         </div>
-                    </RequireLogin>
+                    </RequiresLoggedIn>
                 </Stack>
             </Card.Header>
             <Card.Body>
-                <RequireReport
-                    report={selectedReport}
-                    onEmpty={<Card.Text>스캔 기록이 없습니다.</Card.Text>}
-                >
-                    <ReportListPagination
-                        selectedReport={selectedReport!}
-                        onSelect={setSelectedReport}
-                    />
+                <ConditionalComponent when={selectedReport !== undefined}>
+                    <Pagination>
+                        {reportList.map((report, index) => (
+                            <Pagination.Item
+                                key={index}
+                                active={index === selectedReportIdx}
+                                onClick={onPageSelectHandlerFactory(index)}
+                            >
+                                {new Date(report.created_at).toLocaleString()}
+                            </Pagination.Item>
+                        ))}
+                    </Pagination>
                     <Card>
                         <Card.Body>
                             <Container fluid>
@@ -53,24 +62,16 @@ export function ReportChartedList() {
                             </Container>
                         </Card.Body>
                     </Card>
-                </RequireReport>
+                </ConditionalComponent>
+                <ConditionalComponent when={selectedReportIdx === undefined}>
+                    <Card.Text>스캔 기록이 없습니다.</Card.Text>
+                </ConditionalComponent>
             </Card.Body>
             <Card.Footer>
-                <RequireReport report={selectedReport}>
-                    <div>
-                        {new Date(selectedReport!.created_at).toLocaleString()}{" "}
-                        에 시행된 스캔
-                    </div>
-                </RequireReport>
+                <ConditionalComponent when={selectedReportIdx !== undefined}>
+                    <div>{selectedReport?.created_at} 에 시행된 스캔</div>
+                </ConditionalComponent>
             </Card.Footer>
         </Card>
     );
-}
-
-function RequireReport(
-    props: any | { report?: Report; onEmpty?: JSX.Element }
-) {
-    if (!props.report) return props.onEmpty ?? null;
-
-    return props.children ?? null;
 }

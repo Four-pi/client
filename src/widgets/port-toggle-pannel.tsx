@@ -1,45 +1,36 @@
 import { useEffect, useState } from "react";
-import { Card, Form, ListGroup, Stack } from "react-bootstrap";
+import { Button, Card, Form, ListGroup, Stack } from "react-bootstrap";
 import { api } from "../apis";
 import { Address, fetchAddress } from "../models/core";
 import { DisplayAddress } from "../components/address";
 import { PortStatusBadge } from "../components/port-status-badge";
 
 export function PortTogglePannel() {
-    const [updateSignal, setUpdateSignal] = useState(false);
+    const [addressList, setAddressList] = useState<Address[]>([]);
 
-    function update() {
-        setUpdateSignal(!updateSignal);
+    function update(force?: boolean) {
+        fetchAddress(force)
+            .then((x) => x.slice())
+            .then(setAddressList);
     }
 
-    useEffect(() => {
-        fetchAddress().then(update);
-    });
+    useEffect(update, []);
 
     return (
         <Card>
-            <Card.Header>포트 열기/닫기</Card.Header>
+            <Card.Header>
+                <Stack direction="horizontal">
+                    <div className="me-auto">포트 열기/닫기</div>
+                    <div>
+                        <Button onClick={() => update(true)}>새로고침</Button>
+                    </div>
+                </Stack>
+            </Card.Header>
             <Card.Body>
                 <ListGroup>
-                    {listAddress().map((address, index) => (
+                    {addressList.map((address, index) => (
                         <ListGroup.Item key={index}>
-                            <Stack direction="horizontal" gap={3}>
-                                <div>
-                                    <DisplayAddress
-                                        ip={address.ip}
-                                        port={address.port}
-                                    />
-                                </div>
-                                <div className="ms-auto">
-                                    <PortStatusBadge
-                                        isOnline={address.isOnline}
-                                        isAuthenticated={address.isAuthorized}
-                                    />
-                                </div>
-                                <div>
-                                    <AddressToggelButton address={address} />
-                                </div>
-                            </Stack>
+                            <AddressRow address={address} />
                         </ListGroup.Item>
                     ))}
                 </ListGroup>
@@ -48,27 +39,41 @@ export function PortTogglePannel() {
     );
 }
 
-function AddressToggelButton({ address }: { address: Address }) {
-    const [isAutorized, setIsAutorized] = useState(address.isAuthorized);
+function AddressRow(props: { address: Address }) {
+    const [address, setAddress] = useState(props.address);
 
-    async function update() {
-        const port = await api.port.get(address.ip, address.port);
-        setIsAutorized(port?.is_open ?? false);
-    }
-
-    function onClickHandler() {
-        if (isAutorized) {
-            api.port.close(address.ip, address.port).then(update);
+    async function onClickHandler() {
+        if (address.isAuthorized) {
+            await api.port.close(address.ip, address.port);
         } else {
-            api.port.open(address.ip, address.port).then(update);
+            await api.port.open(address.ip, address.port);
         }
+        api.port.get(props.address.ip, props.address.port).then((port) => {
+            setAddress({
+                ...address,
+                isAuthorized: port?.is_open ?? false,
+            });
+        });
     }
 
     return (
-        <Form.Check
-            type="switch"
-            defaultChecked={address.isAuthorized}
-            onClick={onClickHandler}
-        />
+        <Stack direction="horizontal" gap={3}>
+            <div>
+                <DisplayAddress ip={address.ip} port={address.port} />
+            </div>
+            <div className="ms-auto">
+                <PortStatusBadge
+                    isOnline={address.isOnline}
+                    isAuthenticated={address.isAuthorized}
+                />
+            </div>
+            <div>
+                <Form.Check
+                    type="switch"
+                    defaultChecked={address.isAuthorized}
+                    onClick={onClickHandler}
+                />
+            </div>
+        </Stack>
     );
 }
