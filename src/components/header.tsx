@@ -7,10 +7,9 @@ import {
     NavDropdown,
 } from "react-bootstrap";
 import { LoginModal } from "./header-login-modal";
-import { UserInfo } from "./header-user-info";
-import { LoginToggleButton } from "./header-login-toggle";
-import { logout } from "../models/login";
-import { RequireLogin } from "../components/require-login";
+import { ensureGetCurrentUser, getCurrentUser, logout } from "../models/login";
+import { RequiresLoggedIn, RequiresNotLoggedIn } from "./conditional-component";
+import { UserText } from "./user";
 
 export function Header() {
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -26,7 +25,7 @@ export function Header() {
                 <Navbar.Collapse>
                     <Nav navbarScroll>
                         <Nav.Link href="/">대시보드</Nav.Link>
-                        <RequireLogin>
+                        <RequiresLoggedIn>
                             <NavDropdown title="보안 스캔">
                                 <NavDropdown.Item href="/scan/log">
                                     스캔 기록 보기
@@ -59,23 +58,38 @@ export function Header() {
                                     계정 목록 보기
                                 </NavDropdown.Item>
                             </NavDropdown>
-                        </RequireLogin>
+                        </RequiresLoggedIn>
                     </Nav>
                 </Navbar.Collapse>
                 <Navbar.Collapse className="justify-content-end">
                     <Nav>
-                        <UserInfo />
-                        <LoginToggleButton
-                            onLogin={handleShowLoginModal}
-                            onLogout={logout}
-                        />
-                        <LoginModal
-                            show={showLoginModal}
-                            onHide={handleCloseLoginModal}
-                        />
+                        <RequiresLoggedIn>
+                            <Nav.Item style={{ color: "white" }}>
+                                <Nav.Link active>
+                                    <span style={{ color: "white" }}>
+                                        Signed in as{" "}
+                                        <UserText
+                                            user={getCurrentUser()!}
+                                        />
+                                    </span>
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item onClick={logout}>
+                                <Nav.Link>로그아웃</Nav.Link>
+                            </Nav.Item>
+                        </RequiresLoggedIn>
+                        <RequiresNotLoggedIn>
+                            <Nav.Item onClick={handleShowLoginModal}>
+                                <Nav.Link>로그인</Nav.Link>
+                            </Nav.Item>
+                        </RequiresNotLoggedIn>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
+            <LoginModal
+                show={showLoginModal}
+                onHide={handleCloseLoginModal}
+            />
         </Navbar>
     );
 }
