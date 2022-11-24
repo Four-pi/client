@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { PortRequestCreate } from "../components/port-request-create";
+import { PortRequestCreate } from "../widgets/port-request-create";
 
 export function PortRequestCreatePage() {
     return (

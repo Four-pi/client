@@ -1,6 +1,6 @@
 import { Card } from "react-bootstrap";
 import { api } from "../apis";
-import { UserForm, UserFormData } from "./user-form";
+import { UserForm, UserFormData } from "../components/user-form";
 
 export function UserAdd() {
     const onSubmitHandler = (userFormData: UserFormData) => {

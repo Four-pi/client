@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { PendingPortRequests } from "../components/port-request-pending-list";
+import { PendingPortRequests } from "../widgets/port-request-pending-list";
 
 export function PendingPortRequestPage() {
     return (

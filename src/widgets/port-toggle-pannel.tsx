@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Card, Form, ListGroup, Stack } from "react-bootstrap";
 import { api } from "../apis";
 import { Address, fetchAddress, listAddress } from "../models/address-status";
-import { DisplayAddress } from "./address";
-import { PortStatusBadge } from "./port-status-badge";
+import { DisplayAddress } from "../components/address";
+import { PortStatusBadge } from "../components/port-status-badge";
 
 export function PortTogglePannel() {
     const [updateSignal, setUpdateSignal] = useState(false);

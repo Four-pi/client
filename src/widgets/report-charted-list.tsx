@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Card, Col, Container, Row, Stack } from "react-bootstrap";
 import { fetchAddress, listReport } from "../models/address-status";
 import type { Report } from "../models/base";
-import { ReportChart } from "./report-chart";
-import { ReportList } from "./report-list";
-import { ReportListPagination } from "./report-list-pagination";
-import { RequireLogin } from "./require-login";
+import { ReportChart } from "../components/report-chart";
+import { ReportList } from "../components/report-list";
+import { ReportListPagination } from "../components/report-list-pagination";
+import { RequireLogin } from "../components/require-login";
 
 export function ReportChartedList() {
     const [selectedReport, setSelectedReport] = useState<Report | undefined>(

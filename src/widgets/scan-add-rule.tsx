@@ -1,6 +1,6 @@
 import { Card } from "react-bootstrap";
 import { api} from "../apis";
-import { AddressForm, AddressFormData } from "./address-form";
+import { AddressForm, AddressFormData } from "../components/address-form";
 
 interface SubmittableProps {
     onSubmit: () => any;

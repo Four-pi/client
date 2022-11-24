@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { ScanAddressList } from "../components/scan-address-list";
-import { AddScanRule } from "../components/scan-add-rule";
-import { ImmediateScan } from "../components/scan-immediately";
+import { ScanAddressList } from "../widgets/scan-address-list";
+import { AddScanRule } from "../widgets/scan-add-rule";
+import { ImmediateScan } from "../widgets/scan-immediately";
 
 export function ScanSettingsPage() {
     const [updateSignal, setUpdateSignal] = useState(false);

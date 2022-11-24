@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Card, ListGroup, Stack } from "react-bootstrap";
 import { PortStatusBadge } from "../components/port-status-badge";
 import { sitemap } from "../router";
-import { DisplayAddress } from "./address";
-import { RequireLogin } from "./require-login";
+import { DisplayAddress } from "../components/address";
+import { RequireLogin } from "../components/require-login";
 import { fetchAddress, listAddress } from "../models/address-status";
 
 export function PortList({ max }: { max?: number }) {

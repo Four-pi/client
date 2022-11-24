@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { api } from "../apis";
 import type { MachineStatus } from "../models/base";
-import { MachineMonitoringPart } from "./machine-monitoring-part";
+import { MachineMonitoringPart } from "../components/machine-monitoring-part";
 
 export function MachineMonitoring() {
     const [machineState, setMachineState] = useState<MachineStatus>({});

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Card, ListGroup } from "react-bootstrap";
 import { api } from "../apis";
 import { Request } from "../models/base";
-import { DisplayAddress } from "./address";
-import { PortRequestStatusBadge } from "./port-request-status-badge";
+import { DisplayAddress } from "../components/address";
+import { PortRequestStatusBadge } from "../components/port-request-status-badge";
 
 export function PortRequestList() {
     const [requestList, setRequestList] = useState<Request[]>([]);

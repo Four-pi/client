@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { PortList } from "../components/port-list";
+import { PortList } from "../widgets/port-list";
 
 // TODO: request api를 이용하여 getActivePort 만으로 알잘딱하기.
 

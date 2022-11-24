@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Card, ListGroup, Stack } from "react-bootstrap";
 import { api } from "../apis";
 import { ScanTarget } from "../models/base";
-import { DisplayAddress } from "./address";
+import { DisplayAddress } from "../components/address";
 
 export function ScanAddressList() {
     const [scanTargets, setScanTargets] = useState<ScanTarget[]>([]);

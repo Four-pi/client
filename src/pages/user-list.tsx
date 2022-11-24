@@ -1,6 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { UserList } from "../components/user-list";
-import { UserAdd } from "../components/user-add";
+import { UserList } from "../widgets/user-list";
+import { UserAdd } from "../widgets/user-add";
 
 export function UserListPage() {
     return (

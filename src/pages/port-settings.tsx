@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { OpenNewPort } from "../components/port-open-new";
-import { PortTogglePannel } from "../components/port-toggle-pannel";
+import { OpenNewPort } from "../widgets/port-open-new";
+import { PortTogglePannel } from "../widgets/port-toggle-pannel";
 
 export function PortSettingsPage() {
     const [updateSignal, setUpdateSignal] = useState(false);

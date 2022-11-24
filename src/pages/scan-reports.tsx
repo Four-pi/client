@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { ReportChartedList } from "../components/report-charted-list";
+import { ReportChartedList } from "../widgets/report-charted-list";
 
 export function ScanReportsPage() {
     return (

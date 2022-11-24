@@ -1,8 +1,8 @@
 import { Col, Container, Row, Stack } from "react-bootstrap";
-import { ActivePortStatistic } from "../components/port-active-statistic";
-import { MachineMonitoring } from "../components/machine-monitoring";
-import { PortRequestList } from "../components/port-request-list";
-import { PortList } from "../components/port-list";
+import { ActivePortStatistic } from "../widgets/port-active-statistic";
+import { MachineMonitoring } from "../widgets/machine-monitoring";
+import { PortRequestList } from "../widgets/port-request-list";
+import { PortList } from "../widgets/port-list";
 
 export function MainPage() {
     return (

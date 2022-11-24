@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Card, Table } from "react-bootstrap";
 import { api } from "../apis";
 import { isReviewedPortRequest, Request } from "../models/base";
-import { DisplayAddress } from "./address";
+import { DisplayAddress } from "../components/address";
 
 export function PendingPortRequests() {
     const [requests, setRequests] = useState<Request[]>([]);

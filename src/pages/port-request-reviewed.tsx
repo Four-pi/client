@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { ReviewedPortRequestList } from "../components/port-request-reviewed-list";
+import { ReviewedPortRequestList } from "../widgets/port-request-reviewed-list";
 
 export function ReviewedPortRequestPage() {
     return (
