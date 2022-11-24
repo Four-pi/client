@@ -10,7 +10,7 @@ interface APIOption {
 };
 
 const options: APIOption = {
-    api: restAPI,
+    api: mockAPI,
     logger: console.log,
 }
 
@@ -71,11 +71,11 @@ export const api: FourPiAPI = {
                 options.logger("/port/request/list");
                 return options.api.port.request.list();
             },
-            approve: function (id: string): Promise<boolean> {
+            approve: function (id: string): Promise<Request | undefined> {
                 options.logger("/port/request/approve");
                 return options.api.port.request.approve(id);
             },
-            reject: function (id: string): Promise<boolean> {
+            reject: function (id: string): Promise<Request | undefined> {
                 options.logger("/port/request/reject");
                 return options.api.port.request.reject(id);
             }
@@ -87,7 +87,7 @@ export const api: FourPiAPI = {
                 options.logger("/scan/target/list");
                 return options.api.scan.target.list();
             },
-            create: function (ip: string, subnetMask: string | undefined): Promise<ScanTarget> {
+            create: function (ip: string, subnetMask: string | undefined): Promise<ScanTarget | undefined> {
                 options.logger("/scan/target/add");
                 return options.api.scan.target.create(ip, subnetMask);
             }
