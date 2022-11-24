@@ -1,5 +1,5 @@
 import { ListGroup, Stack } from "react-bootstrap";
-import { ensureFindAddress } from "../models/address-status";
+import { ensureFindAddress } from "../models/core";
 import { Report } from "../models/base";
 import { DisplayAddress } from "./address";
 import { PortStatusBadge } from "./port-status-badge";

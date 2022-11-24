@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card, Col, Container, Row, Stack } from "react-bootstrap";
-import { fetchAddress, listReport } from "../models/address-status";
+import { fetchAddress, listReport } from "../models/core";
 import type { Report } from "../models/base";
 import { ReportChart } from "../components/report-chart";
 import { ReportList } from "../components/report-list";

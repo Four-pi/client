@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
-import { fetchAddress } from "../models/address-status";
+import { fetchAddress } from "../models/core";
 
 export function ActivePortStatistic() {
     const [ countOnline, setCountOnline ] = useState(0);

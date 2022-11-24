@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form, Modal, Stack } from "react-bootstrap";
-import { login } from "../models/login";
+import { login } from "../models/core";
 
 interface LoginModalProps {
     show: boolean;

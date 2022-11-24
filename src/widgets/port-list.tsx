@@ -4,8 +4,7 @@ import { PortStatusBadge } from "../components/port-status-badge";
 import { sitemap } from "../router";
 import { DisplayAddress } from "../components/address";
 import { RequireLogin } from "../components/require-login";
-import { fetchAddress, listAddress } from "../models/address-status";
-import { ConditionalComponent } from "../components/conditional-component";
+import { fetchAddress, listAddress } from "../models/core";
 
 export function PortList({ max }: { max?: number }) {
     const [updateSignal, setUpdateSignal] = useState(false);

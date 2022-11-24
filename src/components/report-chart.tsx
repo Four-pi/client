@@ -1,5 +1,5 @@
 import { Doughnut } from "react-chartjs-2";
-import { findAllAddressByReportId } from "../models/address-status";
+import { findAllAddressByReportId } from "../models/core";
 import { Report } from "../models/base";
 
 export function ReportChart({ report }: { report: Report }) {

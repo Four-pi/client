@@ -7,7 +7,7 @@ import {
     NavDropdown,
 } from "react-bootstrap";
 import { LoginModal } from "./header-login-modal";
-import { ensureGetCurrentUser, getCurrentUser, logout } from "../models/login";
+import { getCurrentUser, logout } from "../models/core";
 import { RequiresLoggedIn, RequiresNotLoggedIn } from "./conditional-component";
 import { UserText } from "./user";
 

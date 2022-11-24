@@ -1,5 +1,4 @@
 import type { User, Port, Request, ScanTarget, Report, MachineStatus } from "../models/base";
-import { getCurrentUser } from "../models/login";
 import { sleep } from "../utils";
 import { FourPiAPI } from "./base";
 
@@ -13,7 +12,7 @@ export const mockAPI: FourPiAPI = {
             return mockUsers.slice();
         },
         auth: async function (id: string, password: string): Promise<User | undefined> {
-            return mockUsers.find(x => x.id === id && x.password == password);
+            return mockUsers.find(x => x.id === id && x.password === password);
         },
         get: async function (id: string): Promise<User | undefined> {
             return await this.list().then(arr => arr.find(x => x.id === id));

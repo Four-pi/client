@@ -1,5 +1,5 @@
 import { api } from "../apis";
-import { isReviewedPortRequest, Report } from "./base";
+import { isReviewedPortRequest, Report, User } from "./base";
 
 export interface Address {
     ip: string;
@@ -75,7 +75,7 @@ async function _determineAllPorts() {
     }));
 
     _reports = await api.scan.report.list()
-        .then(reports => reports.sort((x, y) => x.created_at.localeCompare(y.created_at)));
+        .then(reports => reports.sort((x, y) => y.created_at.localeCompare(x.created_at)));
 
     _reports.forEach(report => report.reports.forEach(x => {
         const address = _ensureFindAddress(x.ip, x.port);
@@ -98,4 +98,52 @@ async function _determineOnlinePorts() {
 
 function wasCreatedToday(report: Report): boolean {
     return new Date(report.created_at).toDateString() === new Date().toDateString();
+}
+
+export async function login(id: string, password: string) {
+    const user = await api.user.auth(id, password);
+    if (user) {
+        _setUser(user);
+        window.location.reload();
+        return;
+    }
+    alert('해당하는 사용자가 없습니다.');
+}
+
+export async function logout() {
+    _setUser(undefined);
+    window.location.reload();
+}
+
+export function isLoggedIn(): boolean {
+    return _getUser() !== undefined;
+}
+
+export function getCurrentUser(): User | undefined {
+    return _getUser();
+}
+
+export function ensureGetCurrentUser(): User {
+    const user = _getUser();
+    if (user === undefined) {
+        throw new Error("User not logged in");
+    }
+    return user;
+}
+
+function _getUser(): User | undefined {
+    const user = window.sessionStorage.getItem('/user');
+    try {
+        return JSON.parse(user!) ?? undefined;
+    } catch (e) {
+        window.sessionStorage.removeItem('/user');
+        return undefined;
+    }
+}
+
+function _setUser(user: User | undefined) {
+    if (!user) {
+        window.sessionStorage.removeItem('/user');
+    }
+    window.sessionStorage.setItem('/user', JSON.stringify(user));
 }
