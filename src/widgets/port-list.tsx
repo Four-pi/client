@@ -75,7 +75,7 @@ export function PortList({ max }: { max?: number }) {
                             <span> (... {countHiddenAddress}개 생략 됨) </span>
                         </div>
                         <div>
-                            <a href="" onClick={onExpandHander}>
+                            <a href="#" onClick={onExpandHander}>
                                 펼치기
                             </a>
                         </div>
