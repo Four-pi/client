@@ -7,7 +7,7 @@ export class UserAPI implements api.UserAPI {
     private sessionStorageCurrentUser = '/user/current';
     private sessionStorageUsers = '/user/list';
 
-    getCurrentUser(): User | undefined {
+    get(): User | undefined {
         const sessionStorageData = window.sessionStorage.getItem(this.sessionStorageCurrentUser);
         return sessionStorageData ? JSON.parse(sessionStorageData) : undefined;
     }
@@ -29,7 +29,7 @@ export class UserAPI implements api.UserAPI {
         window.sessionStorage.setItem(this.sessionStorageUsers, JSON.stringify(users));
     }
 
-    async authUser(id: string, password: string) {
+    async auth(id: string, password: string) {
         await sleep(200);
         const user = this.getUsers().find(u => u.id === id)
         this.setCurrentUser(user);
@@ -40,7 +40,7 @@ export class UserAPI implements api.UserAPI {
         return this.getUsers().find(usr => usr.id === id);
     }
 
-    async signup(id: string, password: string, name: string, department: string, mail?: string | undefined) {
+    async create(id: string, password: string, name: string, department: string, mail?: string | undefined) {
         const user: User = {
             id,
             name: name,
@@ -52,14 +52,14 @@ export class UserAPI implements api.UserAPI {
         return user;
     }
 
-    async listUsers() {
+    async list() {
         await sleep(1000);
         return this.getUsers();
     }
 
     async login(id: string, password: string): Promise<void> {
         await sleep(1000);
-        await this.authUser(id, password);
+        await this.auth(id, password);
     }
 
     async logout(): Promise<void> {
@@ -68,6 +68,6 @@ export class UserAPI implements api.UserAPI {
     }
 
     isLoggedIn(): boolean {
-        return this.getCurrentUser() !== undefined;
+        return this.get() !== undefined;
     }
 }

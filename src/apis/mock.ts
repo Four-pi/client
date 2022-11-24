@@ -1,108 +1,84 @@
-import type { Port, Request, ScanTarget } from "../models/base";
+import type { User, Port, Request, ScanTarget, Report, MachineStatus } from "../models/base";
 import { sleep } from "../utils";
-import * as api from "./base";
+import { FourPiAPI } from "./base";
 import * as data from "./mock-data";
 
-export class ReportAPI implements api.ReportAPI {
-    async getReport(id: string) {
-        return {
-            id,
-            ip: 'localhost',
-            subnet_mask: '24',
-            created_at: "2022-11-02",
-            ip_reports: [],
-        };
-    }
-
-    async listReports() {
-        await sleep(1000);
-        return data.mockReports;
-    }
-}
-
-export function includesPort(portList: Port[], port: Port): boolean {
-    return portList.find((p) => p.ip === port.ip && p.port === port.port) !== undefined;
-}
-
-export class RequestAPI implements api.RequestAPI {
-    async createRequest(ip: string, port: string, usage: string) {
-    }
-
-    async getRequest(id: string): Promise<Request> {
-        return {
-            id,
-            created_by: {
-                id: 'test-user',
-                name: "김보민",
-                department: "모바일사업부",
-                created_at: "2008-01-14T04:33:35Z",
+export const mockAPI: FourPiAPI = {
+    user: {
+        list: async function (): Promise<User[]> {
+            return data.mockUsers;
+        },
+        auth: async function (id: string, password: string): Promise<User | undefined> {
+            return await this.get(id);
+        },
+        get: async function (id: string): Promise<User | undefined> {
+            return await this.list().then(arr => arr.find(x => x.id === id));
+        },
+        create: async function (id: string, password: string, name: string, department: string, mail?: string | undefined): Promise<User> {
+            const user: User = {
+                id,
+                name,
+                department,
+                mail,
+                created_at: new Date().toISOString()
+            }
+            await this.list().then(arr => arr.push(user));
+            return user;
+        },
+    },
+    port: {
+        open: async function (ip: string, port: string): Promise<Port | undefined> {
+            return await this.get(ip, port).then(port => { if (port) port.is_open = true; return port; });
+        },
+        close: async function (ip: string, port: string): Promise<Port | undefined> {
+            return await this.get(ip, port).then(port => { if (port) port.is_open = false; return port; });
+        },
+        get: async function (ip: string, port: string): Promise<Port | undefined> {
+            return await this.list().then(arr => arr.find(x => x.ip === ip && x.port === port));
+        },
+        list: async function (): Promise<Port[]> {
+            return data.mockPorts;
+        },
+        request: {
+            create: async function (ip: string, port: string, usage: string): Promise<any> {
+                throw new Error("Function not implemented.");
             },
-            created_at: "",
-            ip: "",
-            port: "",
-            usage: "",
+            get: async function (id: string): Promise<Request | undefined> {
+                return await this.list().then(arr => arr.find(x => x.id === id));
+            },
+            list: async function (): Promise<Request[]> {
+                throw new Error("Function not implemented.");
+            },
+            approve: async function (id: string): Promise<boolean> {
+                throw new Error("Function not implemented.");
+            },
+            reject: async function (id: string): Promise<boolean> {
+                throw new Error("Function not implemented.");
+            }
         }
-    }
-
-    async listRequests() {
-        return data.mockRequests;
-    }
-
-    async approveRequest(id: string) {
-        return false;
-    }
-
-    async rejectRequest(id: string) {
-        return false;
-    }
-}
-
-export class ScanAPI implements api.ScanAPI {
-    private list: ScanTarget[] = data.mockScanTargets;
-
-    constructor() {
-        this.scan = this.scan.bind(this);
-        this.listScanTargets = this.listScanTargets.bind(this);
-        this.addScanTarget = this.addScanTarget.bind(this);
-        this.removeScanTarget = this.removeScanTarget.bind(this);
-    }
-
-    async scan() {
-        debugger; // 스캔 잘 되고 있나 체크
-        return {
-            id: '1',
-            ip: 'localhost',
-            subnet_mask: '24',
-            created_at: "2022-11-02",
-            ip_reports: [],
-        };
-    }
-
-    async listScanTargets() {
-        return this.list;
-    }
-
-    async addScanTarget(ip: string, subnetMask: string | number | undefined): Promise<ScanTarget> {
-        const scanTarget: ScanTarget = {
-            ip,
-            subnet_mask: subnetMask ? subnetMask.toString() : undefined,
-        };
-        this.list.push(scanTarget);
-        return scanTarget;
-    }
-
-    async removeScanTarget(scanTarget: ScanTarget) {
-        this.list = this.list.filter(oldTarget => !this.isEqualScanTarget(oldTarget, scanTarget));
-        return scanTarget;
-    }
-
-    private isEqualScanTarget(target: ScanTarget, anotherTarget: ScanTarget): boolean {
-        return target.ip === anotherTarget.ip && target.subnet_mask === anotherTarget.subnet_mask;
-    }
-}
-
-export class MachineStatusAPI implements api.MachineStatusAPI {
-    async monitor() {
+    },
+    scan: {
+        target: {
+            list: async function (): Promise<ScanTarget[]> {
+                throw new Error("Function not implemented.");
+            },
+            create: async function (ip: string, subnetMask: string | undefined): Promise<ScanTarget> {
+                throw new Error("Function not implemented.");
+            }
+        },
+        report: {
+            create: async function (): Promise<any> {
+                throw new Error("Function not implemented.");
+            },
+            get: async function (id: string): Promise<Report | undefined> {
+                throw new Error("Function not implemented.");
+            },
+            list: async function (): Promise<Report[]> {
+                throw new Error("Function not implemented.");
+            }
+        }
+    },
+    monitor: async function (): Promise<MachineStatus> {
         await sleep(300);
         return {
             cpu: Math.random() / 10 + 0.3,

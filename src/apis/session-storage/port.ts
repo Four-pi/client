@@ -36,7 +36,7 @@ export class PortAPI implements api.PortAPI {
         return newPort;
     }
 
-    async listPorts() {
+    async list() {
         await sleep(1000);
         return this.getPorts();
     }
