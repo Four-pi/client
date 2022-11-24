@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form, Modal, Stack } from "react-bootstrap";
-import { userApi } from "../apis";
+import { login } from "../models/login";
 
 interface LoginModalProps {
     show: boolean;
@@ -14,13 +14,7 @@ export function LoginModal({ show, onHide }: LoginModalProps) {
             userId: HTMLInputElement;
             userPw: HTMLInputElement;
         };
-        userApi.authUser(userId.value, userPw.value).then(u => {
-            if (!u) {
-                alert('해당하는 사용자가 없습니다.');
-                return;
-            }
-            onHide();
-        });
+        login(userId.value, userPw.value);
     };
 
     return (

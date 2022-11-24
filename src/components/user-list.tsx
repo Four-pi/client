@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Stack, Table } from "react-bootstrap";
-import { userApi } from "../apis";
+import { api } from "../apis";
 import { User } from "../models/base";
 
 export function UserList() {
     const [users, setUsers] = useState<User[]>([]);
 
     function updateUser() {
-        userApi.listUsers().then(setUsers);
+        api.user.list().then(setUsers);
     }
 
     useEffect(updateUser, []);

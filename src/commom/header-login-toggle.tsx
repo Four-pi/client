@@ -1,16 +1,13 @@
 import { Nav } from "react-bootstrap";
-import { userApi } from "../apis";
+import { isLoggedIn } from "../models/login";
 
-interface LoginToggleButtonProps {
+interface Props {
     onLogin?: () => any;
     onLogout?: () => any;
 }
 
-export function LoginToggleButton({
-    onLogin,
-    onLogout,
-}: LoginToggleButtonProps) {
-    return userApi.isLoggedIn() ? (
+export function LoginToggleButton({ onLogin, onLogout }: Props) {
+    return isLoggedIn() ? (
         <Nav.Item onClick={onLogout}>
             <Nav.Link>로그아웃</Nav.Link>
         </Nav.Item>

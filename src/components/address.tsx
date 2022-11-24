@@ -4,7 +4,7 @@ interface AddressProps {
     subnetMask?: string | number | undefined;
 }
 
-export function Address({ ip, port, subnetMask }: AddressProps) {
+export function DisplayAddress({ ip, port, subnetMask }: AddressProps) {
     return (
         <span className="fw-bold">
             <Ip>{ip}</Ip>

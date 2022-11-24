@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-import { requestApi } from "../apis";
+import { api } from "../apis";
 import {
     PortRequestForm,
     PortRequestFormData,
@@ -8,8 +8,8 @@ import { sitemap } from "../router";
 
 export function PortRequestCreate() {
     const onSubmitHandler = ({ ip, port, usage }: PortRequestFormData) => {
-        requestApi
-            .createRequest(ip, port, usage)
+        api.port.request
+            .create(ip, port, usage)
             .then(
                 () => (window.location.href = sitemap.port.request.pending.path)
             );

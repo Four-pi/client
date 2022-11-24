@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { ReportList } from "../components/report-list";
+import { ReportChartedList } from "../components/report-charted-list";
 
 export function ScanReportsPage() {
     return (
@@ -11,7 +11,7 @@ export function ScanReportsPage() {
             </Row>
             <Row className="mb-3">
                 <Col>
-                    <ReportList />
+                    <ReportChartedList />
                 </Col>
             </Row>
         </Container>

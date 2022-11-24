@@ -1,56 +1,45 @@
 import { useEffect, useState } from "react";
 import { Card, Form, ListGroup, Stack } from "react-bootstrap";
-import { portApi } from "../apis";
-import { Port } from "../models/base";
+import { api } from "../apis";
+import { Address, fetchAddress, listAddress } from "../models/address-status";
+import { DisplayAddress } from "./address";
 import { PortStatusBadge } from "./port-status-badge";
 
 export function PortTogglePannel() {
-    const [onlinePorts, setOnlinePorts] = useState<Port[]>([]);
-    const [offlinePorts, setOfflinePorts] = useState<Port[]>([]);
+    const [updateSignal, setUpdateSignal] = useState(false);
 
-    async function updatePorts() {
-        const activePorts = (await portApi.getActivePorts()).slice();
-        const allPorts = (await portApi.listPorts()).slice();
-
-        setOnlinePorts(allPorts.filter((p) => includesPort(activePorts, p)));
-        setOfflinePorts(allPorts.filter((p) => !includesPort(activePorts, p)));
+    function update() {
+        setUpdateSignal(!updateSignal);
     }
 
     useEffect(() => {
-        updatePorts();
-    }, []);
-
-    const handleTogglePort = (port: Port) => {
-        if (port.is_open) {
-            portApi.close(port.ip, port.port).then(updatePorts);
-        } else {
-            portApi.open(port.ip, port.port).then(updatePorts);
-        }
-    };
+        fetchAddress().then(update);
+    });
 
     return (
         <Card>
             <Card.Header>포트 열기/닫기</Card.Header>
             <Card.Body>
                 <ListGroup>
-                    {onlinePorts.map((port, index) => (
+                    {listAddress().map((address, index) => (
                         <ListGroup.Item key={index}>
-                            {renderPort(
-                                port,
-                                true,
-                                port.is_open,
-                                handleTogglePort
-                            )}
-                        </ListGroup.Item>
-                    ))}
-                    {offlinePorts.map((port, index) => (
-                        <ListGroup.Item key={onlinePorts.length + index}>
-                            {renderPort(
-                                port,
-                                false,
-                                port.is_open,
-                                handleTogglePort
-                            )}
+                            <Stack direction="horizontal" gap={3}>
+                                <div>
+                                    <DisplayAddress
+                                        ip={address.ip}
+                                        port={address.port}
+                                    />
+                                </div>
+                                <div className="ms-auto">
+                                    <PortStatusBadge
+                                        isOnline={address.isOnline}
+                                        isAuthenticated={address.isAuthorized}
+                                    />
+                                </div>
+                                <div>
+                                    <AddressToggelButton address={address} />
+                                </div>
+                            </Stack>
                         </ListGroup.Item>
                     ))}
                 </ListGroup>
@@ -58,38 +47,28 @@ export function PortTogglePannel() {
         </Card>
     );
 }
-function renderPort(
-    port: Port,
-    isOnline: boolean,
-    isAuthenticated?: boolean,
-    onTogglePort?: (port: Port) => any
-) {
-    return (
-        <Stack direction="horizontal" gap={3}>
-            <div>
-                {port.ip}
-                <span style={{ color: "gray" }}>:{port.port}</span>
-            </div>
-            <div className="ms-auto">
-                <PortStatusBadge
-                    isOnline={isOnline}
-                    isAuthenticated={isAuthenticated}
-                />
-            </div>
-            <div>
-                <Form.Check
-                    type="switch"
-                    defaultChecked={port.is_open}
-                    onClick={() => onTogglePort?.(port)}
-                />
-            </div>
-        </Stack>
-    );
-}
 
-function includesPort(portList: Port[], port: Port): boolean {
+function AddressToggelButton({ address }: { address: Address }) {
+    const [isAutorized, setIsAutorized] = useState(address.isAuthorized);
+
+    async function update() {
+        const port = await api.port.get(address.ip, address.port);
+        setIsAutorized(port?.is_open ?? false);
+    }
+
+    function onClickHandler() {
+        if (isAutorized) {
+            api.port.close(address.ip, address.port).then(update);
+        } else {
+            api.port.open(address.ip, address.port).then(update);
+        }
+    }
+
     return (
-        portList.find((p) => p.ip === port.ip && p.port === port.port) !==
-        undefined
+        <Form.Check
+            type="switch"
+            defaultChecked={address.isAuthorized}
+            onClick={onClickHandler}
+        />
     );
 }

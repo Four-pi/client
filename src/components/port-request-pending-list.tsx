@@ -1,25 +1,18 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Table } from "react-bootstrap";
-import { requestApi } from "../apis";
-import { Request } from "../models/base";
-import { Address } from "./address";
+import { api } from "../apis";
+import { isReviewedPortRequest, Request } from "../models/base";
+import { DisplayAddress } from "./address";
 
 export function PendingPortRequests() {
     const [requests, setRequests] = useState<Request[]>([]);
 
     function update() {
-        requestApi
-            .listRequests()
-            .then((requests) => requests.filter((r) => r.is_approved))
+        api.port.request
+            .list()
+            .then((arr) => arr.filter((x) => !isReviewedPortRequest(x)))
             .then(setRequests);
     }
-
-    const createOnApproveHandler = (id: string) => () => {
-        requestApi.approveRequest(id).then(update);
-    };
-    const createOnRejectHandler = (id: string) => () => {
-        requestApi.approveRequest(id).then(update);
-    };
 
     useEffect(update, []);
 
@@ -41,33 +34,71 @@ export function PendingPortRequests() {
                     <tbody>
                         {requests.map((request, index) => (
                             <tr key={index}>
-                                <td>
-                                    <Address ip={request.ip} port={request.port} />
-                                </td>
-                                <td>{request.usage ?? ""}</td>
-                                <td>{new Date(request.created_at).toLocaleString()}</td>
-                                <td>{request.created_by.name}</td>
-                                <td>
-                                    <Button
-                                        className="py-1 me-2"
-                                        variant="primary"
-                                        onClick={createOnApproveHandler(request.id)}
-                                    >
-                                        승낙
-                                    </Button>
-                                    <Button
-                                        className="py-1"
-                                        variant="danger"
-                                        onClick={createOnRejectHandler(request.id)}
-                                    >
-                                        거절
-                                    </Button>
-                                </td>
+                                <PendingRequest request={request} />
                             </tr>
                         ))}
                     </tbody>
                 </Table>
             </Card.Body>
         </Card>
+    );
+}
+
+function PendingRequest(props: { request: Request }) {
+    const [request, setRequest] = useState<Request>(props.request);
+
+    function update(req?: Request) {
+        if (req !== undefined) {
+            setRequest(req);
+            return;
+        }
+        api.port.request
+            .get(request.id)
+            .then((req) => req ?? request)
+            .then(update);
+    }
+
+    const onApproveHandler = () => {
+        api.port.request.approve(request.id).then(update);
+    };
+    const onRejectHandler = () => {
+        api.port.request.reject(request.id).then(update);
+    };
+
+    return (
+        <>
+            <td>
+                <DisplayAddress ip={request.ip} port={request.port} />
+            </td>
+            <td>{request.usage ?? ""}</td>
+            <td>{new Date(request.created_at).toLocaleString()}</td>
+            <td>{request.created_by.name}</td>
+            <td>
+                {isReviewedPortRequest(request) ? (
+                    request.is_approved ? (
+                        "승낙됨"
+                    ) : (
+                        "거절됨"
+                    )
+                ) : (
+                    <>
+                        <Button
+                            className="py-1 me-2"
+                            variant="primary"
+                            onClick={onApproveHandler}
+                        >
+                            승낙
+                        </Button>
+                        <Button
+                            className="py-1"
+                            variant="danger"
+                            onClick={onRejectHandler}
+                        >
+                            거절
+                        </Button>
+                    </>
+                )}
+            </td>
+        </>
     );
 }

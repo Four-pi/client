@@ -1,12 +1,10 @@
 import { Nav } from "react-bootstrap";
-import { userApi } from "../apis";
+import { getCurrentUser, isLoggedIn } from "../models/login";
 
 export function UserInfo() {
-    if (!userApi.isLoggedIn())
+    if (!isLoggedIn())
         return null;
-
-    const user = userApi.getCurrentUser()!;
-
+    const user = getCurrentUser();
     return (
         <Nav.Item style={{ color: "white" }}>
             <Nav.Link active>

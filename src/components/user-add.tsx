@@ -1,11 +1,10 @@
 import { Card } from "react-bootstrap";
-import { userApi } from "../apis";
+import { api } from "../apis";
 import { UserForm, UserFormData } from "./user-form";
 
 export function UserAdd() {
     const onSubmitHandler = (userFormData: UserFormData) => {
-        userApi
-            .signup(
+        api.user.create(
                 userFormData.id,
                 userFormData.password,
                 userFormData.name,

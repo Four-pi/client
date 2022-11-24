@@ -6,19 +6,19 @@ import { PortList } from "../components/port-list";
 
 export function MainPage() {
     return (
-        <Container className="mt-3" fluid>
-            <Row>
+        <Container fluid>
+            <Row className="my-3">
                 <Col xs={6}>
                     <Stack gap={3}>
                         <ActivePortStatistic />
-                        <PortList />
+                        <PortList max={10} />
                     </Stack>
                 </Col>
                 <Col xs={6}>
                     <PortRequestList />
                 </Col>
             </Row>
-            <Row>
+            <Row className="mb-3">
                 <Col xs={12}>
                     <MachineMonitoring />
                 </Col>

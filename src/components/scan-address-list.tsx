@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Button, Card, ListGroup, Stack } from "react-bootstrap";
-import { scanApi } from "../apis";
+import { api } from "../apis";
 import { ScanTarget } from "../models/base";
-import { Address } from "./address";
+import { DisplayAddress } from "./address";
 
 export function ScanAddressList() {
     const [scanTargets, setScanTargets] = useState<ScanTarget[]>([]);
 
     function updateScanTargets() {
-        scanApi.listScanTargets().then(setScanTargets);
+        api.scan.target.list().then(setScanTargets);
     }
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export function ScanAddressList() {
                 <ListGroup>
                     {scanTargets.map((scanTarget, index) => (
                         <ListGroup.Item key={index}>
-                            <Address
+                            <DisplayAddress
                                 ip={scanTarget.ip}
                                 subnetMask={scanTarget.subnet_mask}
                             />

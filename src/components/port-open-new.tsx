@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-import { portApi } from "../apis";
+import { api } from "../apis";
 import { AddressForm, AddressFormData } from "./address-form";
 
 interface SubmittableProps {
@@ -8,7 +8,7 @@ interface SubmittableProps {
 
 export function OpenNewPort({ onSubmit }: SubmittableProps) {
     const onSubmitHandler = ({ ip, port }: AddressFormData) => {
-        portApi.open(ip, port!).then(onSubmit);
+        api.port.open(ip, port!).then(onSubmit);
     };
 
     return (

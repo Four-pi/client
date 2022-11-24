@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-import { scanApi } from "../apis";
+import { api} from "../apis";
 import { AddressForm, AddressFormData } from "./address-form";
 
 interface SubmittableProps {
@@ -8,7 +8,7 @@ interface SubmittableProps {
 
 export function AddScanRule({ onSubmit }: SubmittableProps) {
     const onSubmitHandler = ({ ip, subnetMask }: AddressFormData) => {
-        scanApi.addScanTarget(ip, subnetMask).then(onSubmit);
+        api.scan.target.create(ip, subnetMask).then(onSubmit);
     };
 
     return (

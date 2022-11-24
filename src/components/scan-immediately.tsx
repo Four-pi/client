@@ -1,5 +1,5 @@
 import { Button, Card, Stack } from "react-bootstrap";
-import { scanApi } from "../apis";
+import { api } from "../apis";
 
 interface SubmittableProps {
     onSubmit?: () => any;
@@ -7,7 +7,7 @@ interface SubmittableProps {
 
 export function ImmediateScan({ onSubmit }: SubmittableProps) {
     const onSubmitHandler = () => {
-        scanApi.scan().then(onSubmit);
+        api.scan.report.create().then(onSubmit);
     };
 
     return (
