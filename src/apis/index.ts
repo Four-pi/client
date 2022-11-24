@@ -3,23 +3,34 @@ import type { FourPiAPI } from "./base";
 import { mockAPI } from "./mock";
 import { restAPI } from "./rest";
 
-// TODO: 실제로 사용할 API 종류를 여기서 선택: mock / rest
-interface APIOption {
-    api: FourPiAPI;
-    logger: (x: any) => any;
-};
-
-const options: APIOption = {
-    api: mockAPI,
+const options = {
+    api: restAPI,
     logger: console.log,
 }
 
-export function setApi(api: FourPiAPI) {
-    options.api = api;
+export function setLogger(func: (x: any) => any) {
+    options.logger = func;
 }
 
-export function setLoggerFunction(func: (x: any) => any) {
-    options.logger = func;
+export function isDemoEnabled(): boolean {
+    return Boolean(window.sessionStorage.getItem('use-demo'));
+}
+
+export function toggleDemo() {
+    if (isDemoEnabled()) {
+        window.sessionStorage.removeItem('use-demo');
+    } else {
+        window.sessionStorage.setItem('use-demo', 'TRUE');
+    }
+    window.location.reload();
+}
+
+function setup() {
+    if (isDemoEnabled()) {
+        options.api = mockAPI;
+    } else {
+        options.api = restAPI;
+    }
 }
 
 export const api: FourPiAPI = {
@@ -112,3 +123,5 @@ export const api: FourPiAPI = {
         return options.api.monitor();
     }
 };
+
+setup();

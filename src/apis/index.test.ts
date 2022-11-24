@@ -1,11 +1,11 @@
-import { api, setLoggerFunction } from ".";
+import { api, setLogger } from ".";
 import { isPort, isPortRequest, isReviewedPortRequest, isReport, isScanTarget, isUser } from "../models/base";
 
 function generateRandomString(): string {
     return Math.random().toString().slice(2, 10);
 }
 
-setLoggerFunction(x => x);
+setLogger(x => x);
 
 describe('/user', () => {
 
