@@ -1,5 +1,27 @@
 import { Card, Form, Stack } from "react-bootstrap";
-import { isDemoEnabled, toggleDemo } from "../apis";
+import { disableDemo, enableDemo, isDemoEnabled } from "../apis";
+
+function shouldDemoBeEnabled(): boolean {
+    return Boolean(window.sessionStorage.getItem('use-demo'));
+}
+
+function toggle() {
+    if (shouldDemoBeEnabled()) {
+        window.sessionStorage.removeItem('use-demo');
+    } else {
+        window.sessionStorage.setItem('use-demo', 'TRUE');
+    }
+    apply();
+    window.location.reload();
+}
+
+function apply() {
+    if (shouldDemoBeEnabled()) {
+        disableDemo();
+    } else {
+        enableDemo();
+    }
+}
 
 export function DemoSwitch() {
     return (
@@ -11,7 +33,7 @@ export function DemoSwitch() {
                         <Form.Check
                             type="switch"
                             defaultChecked={isDemoEnabled()}
-                            onClick={toggleDemo}
+                            onClick={toggle}
                         />
                     </div>
                 </Stack>
@@ -26,3 +48,5 @@ export function DemoSwitch() {
         </Card>
     );
 }
+
+apply();

@@ -12,25 +12,16 @@ export function setLogger(func: (x: any) => any) {
     options.logger = func;
 }
 
-export function isDemoEnabled(): boolean {
-    return Boolean(window.sessionStorage.getItem('use-demo'));
+export function enableDemo() {
+    options.api = mockAPI;
 }
 
-export function toggleDemo() {
-    if (isDemoEnabled()) {
-        window.sessionStorage.removeItem('use-demo');
-    } else {
-        window.sessionStorage.setItem('use-demo', 'TRUE');
-    }
-    window.location.reload();
+export function disableDemo() {
+    options.api = restAPI;
 }
 
-function setup() {
-    if (isDemoEnabled()) {
-        options.api = mockAPI;
-    } else {
-        options.api = restAPI;
-    }
+export function isDemoEnabled() {
+    return options.api === mockAPI;
 }
 
 export const api: FourPiAPI = {
@@ -123,5 +114,3 @@ export const api: FourPiAPI = {
         return options.api.monitor();
     }
 };
-
-setup();
