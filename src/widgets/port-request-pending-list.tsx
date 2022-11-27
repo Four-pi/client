@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { api } from "../apis";
-import { isReviewedPortRequest, Request } from "../models/base";
+import { Request } from "../models/base";
 import { RequestTable } from "../components/port-request-table";
 
 export function PendingPortRequests() {
@@ -10,9 +10,11 @@ export function PendingPortRequests() {
     function update() {
         api.port.request
             .list()
-            .then((arr) => arr.filter((x) => !isReviewedPortRequest(x)))
+            .then((arr) => arr.filter((x) => x.is_approved === undefined))
             .then(setRequests);
     }
+
+    console.log(requests)
 
     useEffect(update, []);
 

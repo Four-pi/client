@@ -1,4 +1,5 @@
 import type { User, Port, Request, ScanTarget, Report, MachineStatus } from "../models/base";
+import { getCurrentUser } from "../models/core";
 import { sleep } from "../utils";
 import { FourPiAPI } from "./base";
 import { MOCK_PORTS } from "./mock/ports";
@@ -36,7 +37,6 @@ class SessionStorageHandler<T> {
         return this.items.slice();
     }
 
-
     set(value: T[]) {
         this.items = value;
         this.save();
@@ -44,6 +44,11 @@ class SessionStorageHandler<T> {
 
     add(value: T) {
         this.items.push(value);
+        this.save();
+    }
+
+    remove(value: T) {
+        this.items = this.items.filter(x => x === value);
         this.save();
     }
 }
@@ -62,7 +67,7 @@ export function resetMockUps() {
     scanReportSessionStorage.reset();
 }
 
-var currentUser: User | undefined;
+var currentUser: User | undefined = getCurrentUser();
 
 export const mockAPI: FourPiAPI = {
     user: {
@@ -147,6 +152,7 @@ export const mockAPI: FourPiAPI = {
                 x.is_approved = true;
                 x.reviewed_at = new Date().toISOString();
                 x.reviewed_by = currentUser;
+                requestSessionStorage.save();
                 return x;
             },
             reject: async function (id: string): Promise<Request | undefined> {
@@ -155,6 +161,7 @@ export const mockAPI: FourPiAPI = {
                 x.is_approved = false;
                 x.reviewed_at = new Date().toISOString();
                 x.reviewed_by = currentUser;
+                requestSessionStorage.save();
                 return x;
             }
         }
