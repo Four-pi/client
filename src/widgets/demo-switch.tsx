@@ -1,15 +1,16 @@
 import { Card, Form, Stack } from "react-bootstrap";
 import { disableDemo, enableDemo, isDemoEnabled } from "../apis";
+import { resetMockUps } from "../apis/mock";
 
 function shouldDemoBeEnabled(): boolean {
-    return Boolean(window.sessionStorage.getItem('use-demo'));
+    return Boolean(window.sessionStorage.getItem("use-demo"));
 }
 
 function toggle() {
     if (shouldDemoBeEnabled()) {
-        window.sessionStorage.removeItem('use-demo');
+        window.sessionStorage.removeItem("use-demo");
     } else {
-        window.sessionStorage.setItem('use-demo', 'TRUE');
+        window.sessionStorage.setItem("use-demo", "TRUE");
     }
     apply();
     window.location.reload();
@@ -40,9 +41,18 @@ export function DemoSwitch() {
             </Card.Header>
             <Card.Body>
                 <Card.Text>
-                    {isDemoEnabled()
-                        ? "헌재 목업 데이터 사용 중"
-                        : "헌재 서버로 부터 데이터 수신 중"}
+                    {isDemoEnabled() ? (
+                        <Stack direction="horizontal">
+                            <div>헌재 목업 데이터 사용 중</div>
+                            <div className="ms-auto">
+                                <a href="#" onClick={() => resetMockUps()}>
+                                    목업 데이터 초기화
+                                </a>
+                            </div>
+                        </Stack>
+                    ) : (
+                        "헌재 서버로 부터 데이터 수신 중"
+                    )}
                 </Card.Text>
             </Card.Body>
         </Card>
