@@ -28,6 +28,13 @@ export function ReportList({ report }: { report: Report }) {
                                         portReport.port
                                     ).isAuthorized
                                 }
+
+                                isOnline={
+                                    ensureFindAddress(
+                                        portReport.ip,
+                                        portReport.port
+                                    ).isOnline
+                                }
                             />
                         </div>
                     </Stack>

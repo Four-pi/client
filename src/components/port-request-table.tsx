@@ -50,7 +50,7 @@ function _PendingRequestTableRow(props: any & { request: Request }) {
                 <DisplayAddress ip={request.ip} port={request.port} />
             </td>
             <td>{request.usage ?? ""}</td>
-            <td>{request.created_by.name}</td>
+            <td>{request.created_by?.name}</td>
             <td>{new Date(request.created_at).toLocaleString()}</td>
             <td colSpan={2}>아직 처리되지 않음</td>
             <td>
@@ -89,7 +89,7 @@ function _ReviewedRequestTableRow(props: any & { request: Request }) {
                 <DisplayAddress ip={request.ip} port={request.port} />
             </td>
             <td>{request.usage ?? ""}</td>
-            <td>{request.created_by.name}</td>
+            <td>{request.created_by?.name}</td>
             <td>{new Date(request.created_at).toLocaleString()}</td>
             <td>{request.reviewed_by?.name}</td>
             <td>{new Date(request.reviewed_at).toLocaleString()}</td>

@@ -28,7 +28,7 @@ export function PortRequestList() {
                             <div className="ms-2 me-auto">
                                 <DisplayAddress ip={req.ip} port={req.port} />
                                 <div>
-                                    by {req.created_by.name} at {new Date(req.created_at).toLocaleString()}
+                                    by {req.created_by?.name ?? '?'} at {new Date(req.created_at).toLocaleString()}
                                 </div>
                             </div>
                             <PortRequestStatusBadge request={req} />
