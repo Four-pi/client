@@ -6,13 +6,23 @@ type MockUser = User & {
     password: string;
 }
 
+var currentUser: User | undefined;
+
 export const mockAPI: FourPiAPI = {
     user: {
         list: async function (): Promise<User[]> {
-            return mockUsers.slice();
+            return mockUsers.map(x => ({
+                id: x.id,
+                name: x.name,
+                department: x.department,
+                mail: x.mail,
+                created_at: x.created_at
+            }));
         },
         auth: async function (id: string, password: string): Promise<User | undefined> {
-            return mockUsers.find(x => x.id === id && x.password === password);
+            const authenticatedUser = mockUsers.find(x => x.id === id && x.password === password);
+            currentUser = authenticatedUser;
+            return await this.get(authenticatedUser?.id ?? '');
         },
         get: async function (id: string): Promise<User | undefined> {
             return await this.list().then(arr => arr.find(x => x.id === id));
@@ -21,15 +31,14 @@ export const mockAPI: FourPiAPI = {
             if (await this.get(id)) {
                 return undefined;
             }
-            const user: MockUser = {
+            const user: User = {
                 id,
                 name,
-                password,
                 department,
                 mail,
                 created_at: new Date().toISOString()
             }
-            mockUsers.push(user);
+            mockUsers.push({ ...user, password });
             return user;
         },
     },
@@ -64,7 +73,7 @@ export const mockAPI: FourPiAPI = {
                     port,
                     usage,
                     created_at: new Date().toISOString(),
-                    created_by: mockUsers[0],
+                    created_by: currentUser!,
                 };
                 mockRequests.push(x);
                 return x;
@@ -80,7 +89,7 @@ export const mockAPI: FourPiAPI = {
                 if (!x) return undefined;
                 x.is_approved = true;
                 x.reviewed_at = new Date().toISOString();
-                x.reviewed_by = mockUsers[0];
+                x.reviewed_by = currentUser;
                 return x;
             },
             reject: async function (id: string): Promise<Request | undefined> {
@@ -88,7 +97,7 @@ export const mockAPI: FourPiAPI = {
                 if (!x) return undefined;
                 x.is_approved = false;
                 x.reviewed_at = new Date().toISOString();
-                x.reviewed_by = mockUsers[0];
+                x.reviewed_by = currentUser;
                 return x;
             }
         }
@@ -171,6 +180,13 @@ export const mockUsers: MockUser[] = [
         name: "팀쿡",
         department: 'Apple',
         created_at: "2008-01-14T04:33:35Z",
+    },
+    {
+        id: 'qhals77',
+        name: "김보민",
+        password: "1234",
+        department: "근로장학부",
+        created_at: "2022-11-24T04:33:35Z",
     }
 ];
 
