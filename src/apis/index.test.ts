@@ -1,6 +1,5 @@
 import { api, setLogger } from ".";
-import { isReport, isScanTarget } from "../models/base";
-import { MachineStatus, Port, Request, ScanTarget, User } from "./base";
+import { MachineStatus, Port, Request, ScanTarget, User, isReport, isScanTarget } from "../models/base";
 
 function generateRandomString(length: number = 25): string {
     const start = 2;

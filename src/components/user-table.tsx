@@ -1,5 +1,5 @@
 import { Table } from "react-bootstrap";
-import { User } from "../apis/base";
+import { User } from "../models/base";
 
 function _UserTable(props: any) {
     return (
