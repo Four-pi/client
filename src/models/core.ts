@@ -91,13 +91,15 @@ async function _determineAutorizedPorts() {
 }
 
 async function _determineOnlinePorts() {
-    _reports.filter(wasCreatedToday).forEach(report => report.reports.forEach(portReport => {
+    _reports.filter(wasOnlineRecently).forEach(report => report.reports.forEach(portReport => {
         _ensureFindAddress(portReport.ip, portReport.port).isOnline = true;
     }));
 }
 
-function wasCreatedToday(report: Report): boolean {
-    return new Date(report.created_at).toDateString() === new Date().toDateString();
+function wasOnlineRecently(report: Report): boolean {
+    const timePassed = Date.now() - new Date(report.created_at).getTime();
+    const allowedHours = 12;
+    return timePassed < (allowedHours * 60 * 60 *1000);
 }
 
 export async function login(id: string, password: string) {
