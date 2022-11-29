@@ -4,7 +4,7 @@ import { sleep } from "../utils";
 import type { FourPiAPI } from "./base";
 
 const axiosConfig: AxiosRequestConfig = {
-    baseURL: "http://211.203.128.37:3001",
+    baseURL: "http://localhost:3001",
 };
 
 const client = axios.create(axiosConfig);
@@ -19,11 +19,11 @@ export const restAPI: FourPiAPI = {
                 user_id: id,
                 password
             })
-            .then(res => res.data)
-            .then(data => {
-                if (data?.isError) return undefined;
-                return data?.data;
-            });
+                .then(res => res.data)
+                .then(data => {
+                    if (data?.isError) return undefined;
+                    return data?.data;
+                });
         },
         get: async function (id: string): Promise<User | undefined> {
             return await client.get('/get/' + id).then(res => res.data);
@@ -34,24 +34,39 @@ export const restAPI: FourPiAPI = {
                 password,
                 user_name: name,
                 department_name: department,
-                mail
+                mail,
             })
-            .then(res => res.data)
-            .then(data => data ? data : undefined);
+                .then(res => res.data)
+                .then(data => data ? {
+                    ...data,
+                    mail: data.mail ?? undefined
+                } : undefined);
         }
     },
     port: {
         open: async function (ip: string, port: string): Promise<Port | undefined> {
-            return await client.post('/open/port', { ip, port }).then(res => res.data);
+            return await client.post('/open/port', { ip, port })
+                .then(async () => await this.get(ip, port));
         },
         close: async function (ip: string, port: string): Promise<Port | undefined> {
-            return await client.post('/close/port', { ip, port }).then(res => res.data);
+            return await client.post('/close/port', { ip, port })
+                .then(async () => await this.get(ip, port));
         },
         get: async function (ip: string, port: string): Promise<Port | undefined> {
-            return await this.list().then(arr => arr.find(x => x.ip === ip && x.port === port));
+            const foundPort = await this.list().then(arr => arr.find(x => x.ip === ip && x.port === port));
+            return foundPort ?? {
+                ip,
+                port,
+                is_open: false,
+            };
         },
         list: async function (): Promise<Port[]> {
-            return await client.get('/Port/list').then(res => res.data ?? []);
+            return await client.get('/Port/list')
+                .then(res => res.data ?? [])
+                .then(data => data.map((x: Port) => ({
+                    ...x,
+                    port: x.port.toString()
+                })));
         },
         request: {
             create: async function (ip: string, port: string, usage: string): Promise<Request | undefined> {
@@ -59,7 +74,9 @@ export const restAPI: FourPiAPI = {
                     ip,
                     port,
                     usage
-                }).then(res => res.data);
+                })
+                .then(res => res.data)
+                .then(data => data ? data : undefined);
             },
             get: async function (id: string): Promise<Request> {
                 return await client.get('/get/request/' + id).then(res => res.data);
